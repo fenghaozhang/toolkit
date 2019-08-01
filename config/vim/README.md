@@ -1,0 +1,1 @@
+# Replace ~/.vimrc with "vimrc"

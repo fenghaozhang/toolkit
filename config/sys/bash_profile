@@ -1,0 +1,51 @@
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+. ~/.bashrc
+fi
+
+: -------Environment--------
+export PATH=$PATH:$HOME/bin:$HOME/script
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+: -------Shortcut-----------
+export apsara=$HOME/project/apsara
+export pangu=$apsara/pangu
+export lsbd=$pangu/lsbd
+
+export apsara2=$HOME/project/apsara2
+export pangu2=$apsara2/pangu
+export lsbd2=$pangu2/lsbd
+
+export apsara3=$HOME/project/apsara3
+export pangu3=$apsara3/pangu
+export lsbd3=$pangu3/lsbd
+
+export apsara4=$HOME/project/apsara4
+export pangu4=$apsara4/pangu
+export lsbd4=$pangu4/lsbd
+
+export apsara5=$HOME/project/apsara5
+export pangu5=$apsara5/pangu
+export lsbd5=$pangu5/lsbd
+
+: --------Alias-------------
+alias vi=vim
+alias gdb=$HOME/project/apsara/alicpp/built/gcc-4.9.2/gdb-7.10/bin/gdb
+
+: --------Ulimit------------
+ulimit -c unlimited
+
+: --------Git---------------
+git config user.email "allen.zfh@alibaba-inc.com"
+git config user.name "Zhang, Fenghao"
+git() {
+    if [[ $@ == "push" ]]; then echo -e "\033[33mWarning! Please use 'git push origin HEAD:refs/for/users/block/mcqueen_dev_pangu2_for_ecs'\033[0m";
+    elif [[ $@ == "help" ]]; then echo -e "\033[33mPlease use 'git push origin HEAD:refs/for/users/block/mcqueen_dev_pangu2_for_ecs'\033[0m";
+    elif [[ $@ == "push --force" ]]; then command git push;
+    else command git "$@";
+    fi;
+}
+
+: -------Others------------
+set -o ignoreeof

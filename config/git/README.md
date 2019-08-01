@@ -1,0 +1,1 @@
+# Replace ~/.gitconfig with "gitconfig"

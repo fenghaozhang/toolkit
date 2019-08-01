@@ -1,0 +1,15 @@
+[push]
+    default = simple
+[credential]
+    helper = store
+[user]
+    email = allen.zfh@alibaba-inc.com
+    name = allen.zfh
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    ui = true
+    pager = true

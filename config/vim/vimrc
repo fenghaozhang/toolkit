@@ -1,0 +1,223 @@
+" ============================= Vundle ===========================
+"
+" Install Vundle
+" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+set nocompatible                                " be iMproved, required
+filetype off                                    " required
+
+" Startup Vundle to manage your plugin
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" Let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Commands
+" :PluginList       - List all plugins
+" :PluginInstall    - Install plugins
+" :PluginUpdate     - Update plugins
+" :PluginSearch     - Search plugins, for example :PluginSearch xml can search xml-related plugins
+" :PluginClean      - Delete plugins, comment to-be-deleted plugins and then execute
+
+" h: vundle         - Get help information
+
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'vim-airline/vim-airline'                " Show file information
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'funorpain/vim-cpplint'                  " Static syntax and style checker for C++ source code
+Plugin 'majutsushi/tagbar'                      " Tag bar: F9
+Plugin 'scrooloose/nerdcommenter'               " Comment enhancement: \ca, \cc, \cs
+Plugin 'scrooloose/nerdtree'                    " File namespace: F10, P, p, space
+" Plugin 'shougo/unite.vim'                     " File search?
+Plugin 'shougo/vimproc.vim'                     " Unknown
+Plugin 'sjl/gundo.vim'                          " Modify history: \r
+" Plugin 'sprsquish/thrift.vim'                 " Syntax highlighting
+Plugin 'tomasr/molokai'                         " Window/Color style
+Plugin 'tpope/vim-fugitive'                     " Git enhancement: Gstatus, Gdiff
+Plugin 'tpope/vim-markdown'                     " Syntax highlighting
+Plugin 'uarun/vim-protobuf'                     " Syntax highlighting for Google protocol buffer
+" Plugin 'Valloric/YouCompleteMe'               " Auto code complete plugin
+Plugin 'rking/ag.vim'                           " Code search: Ag code path
+" Plugin 'mileszs/ack.vim'
+Plugin 'derekwyatt/vim-scala'                   " For scala
+Plugin 'KuoE0/vim-scavenger'                    " Cleanup trailing whitespaces
+Plugin 'ctrlpvim/ctrlp.vim'                     " File search: \f,\p,C+j/k, C+x, C+v, C+t
+
+" Add your own plugin above
+
+call vundle#end()                               " required
+filetype plugin indent on                       " required, finish vundle setup
+
+"
+" ============================= Common ============================
+"
+set shell=/bin/bash
+
+set t_Co=256
+set t_AB=^[[48;5;%dm
+set t_AF=^[[38;5;%dm
+
+set bg=dark
+set ruler
+set cindent
+set nocompatible
+set tags=tags;
+set ts=4
+set sw=4
+set bs=2
+set et
+set nu
+set hlsearch
+set encoding=utf-8
+if !has('nvim')
+    set term=xterm-256color
+endif
+
+" Always show status bar
+set laststatus=2                                    
+
+" Colorscheme solarized
+syntax on
+
+" Enable mouse copy
+set mouse=v
+
+" NerdTree
+nnoremap <silent> <F10> :NERDTreeToggle<CR>
+
+" NerdCommenterlet
+let g:NERDSpaceDelims=1
+
+" Tagbar
+nnoremap <silent> <F9> :TagbarToggle<CR>
+let g:tagbar_left = 1
+
+" Gundo
+nnoremap <leader>r :GundoToggle<CR>
+
+" Highlight current line
+set cursorline
+hi cursorline cterm=none term=none
+autocmd WinEnter * setlocal cursorline
+autocmd WinLeave * setlocal nocursorline
+highlight CursorLine guibg=#303000 ctermbg=234
+
+" Enable python plugin in NeoVim
+if has('nvim')
+  runtime! plugin/python_setup.vim
+endif
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal! g`\"" |
+  \ endif
+
+" Shortcut
+nmap <F7> :make<CR>:copen<CR><C-W><C-P>
+nmap <F8> :call Cpplint()<CR>
+" nmap <F3> :UniteWithProjectDir -start-insert file_rec/async:!<CR>
+nmap <F4> :grep -Ir <cword> .<CR><CR>:copen<CR>
+nmap gd :YcmCompleter GoTo<CR>
+nmap cn :cnext<CR>
+nmap cp :cprev<CR>
+nmap gt :bnext<CR>
+nmap gT :bprev<CR>
+
+" Let command mode support emacs style movemenet keys
+cnoremap <C-A> <Home>
+cnoremap <C-F> <Right>
+cnoremap <C-B> <Left>
+cnoremap <Esc>b <S-Left>
+cnoremap <Esc>f <S-Right>
+
+" GUI options
+set guioptions=a
+set makeprg=nice\ ~/gentoo/usr/bin/pypy\ /home/chaoshi/scons/scons.py\ -U\ detail_log=yes\ -j24\ alicpp=4.9.2
+" set makeprg=make\ -j20
+
+" Clean trailing whitespaces
+let g:scavenger_auto_clean_up_on_write=1
+
+"
+" ============================= Ctrlp ============================
+"
+let g:ctrlp_map = '<leader>p'
+let g:ctrlp_cmd = 'CtrlP'
+map <leader>f :CtrlPMRU<CR>
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+    \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc)$',
+    \ }
+let g:ctrlp_working_path_mode=0
+let g:ctrlp_match_window_bottom=1
+let g:ctrlp_max_height=15
+let g:ctrlp_match_window_reversed=0
+let g:ctrlp_mruf_max=500
+let g:ctrlp_follow_symlinks=1
+
+"
+" ============================= Youcompleteme ============================
+"
+
+"
+" ============================= Airline ============================
+"
+let g:airline#extensions#branch#enabled = 1
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline_theme = 'powerlineish'
+let g:vimshell_prompt = 'vimshell $ '
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1 " Show tab number
+
+"
+" ============================= CScope ============================
+"
+if has("cscope")
+    set cscopetag   " support Ctrl+] and Ctrl+t to dump and return
+    " check cscope for definition of a symbol before checking ctags:
+    " set to 1 if you want the reverse search order.
+    set csto=1
+
+    " add any cscope database in current directory
+    if filereadable("cscope.out")
+        set nocscopeverbose
+        cs add cscope.out
+        set cscopeverbose
+    " else add the database pointed to by environment variable
+    elseif $CSCOPE_DB !=""
+        cs add $CSCOPE_DB
+    endif
+
+    " show msg when any other cscope db added
+    set cscopeverbose
+    " find C singal
+    nmap <C-/>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+    " find definition
+    nmap <C-/>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+    " find functions call this function
+    nmap <C-/>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+    " find functions this function calls
+    nmap <C-/>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-/>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-/>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+    nmap <C-/>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+    nmap <C-/>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+endif
+
+" ============================= Ag ============================
+"
+let g:ag_prg="/home/allen.zfh/bin/ag --vimgrep"
+let g:ag_working_path_mode="r"
+" e    to open file and close the quickfix window
+" o    to open (same as enter)
+" go   to preview file (open but maintain focus on ag.vim results)
+" t    to open in new tab
+" T    to open in new tab silently
+" h    to open in horizontal split
+" H    to open in horizontal split silently
+" v    to open in vertical split
+" gv   to open in vertical split silently
+" q    to close the quickfix window
