@@ -37,8 +37,7 @@ public:
     }
 
     void TearDown() override
-    {
-    }
+    { }
 };
 
 TEST_F(MemCacheFixture, Simple)
@@ -49,7 +48,7 @@ TEST_F(MemCacheFixture, Simple)
     MemCache pool(sizeof(Item));
 
     uint64_t start = GetCurrentTimeInUs();
-    int rounds = 10000000;
+    int rounds = 1UL * 10000000;
     for (int i = 0; i < rounds; ++i)
     {
         Item obj(rand(), rand(), rand(), rand());   // NOLINT(runtime/threadsafe_fn)

@@ -1,3 +1,5 @@
+MODE=$1
+
 workingDir=`pwd`
 
 includeDir="$workingDir/thirdparty/include"
@@ -12,12 +14,19 @@ testFiles="src/base/test/intrusive_list_test.cpp        \
 allFiles="$srcFiles $testFiles"
 
 libDir="$workingDir/thirdparty/lib"
-libs="$libDir/libgtest.so"
+libs="$libDir/libgtest.so $libDir/libtcmalloc.a -lpthread"
 
-outputDir="build"
+outputDir="build/"
 target="$outputDir/unittest"
-parameters="-Wall -g -std=c++11 -I$workingDir -I$includeDir -L$libDir $libs"
+parameters="-Wall -std=c++11 -I$workingDir -I$includeDir $libs"
+if [ $MODE == "DEBUG" ]; then
+    parameters=$parameters" -DDEBUG "
+else
+    parameters=$parameters" -O2 "
+fi
 
 g++ -o $target $allFiles $parameters
 
-# cp $libs $outputDir
+for lib in $libs; do
+    cp $lib $outputDir
+done
