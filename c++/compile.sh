@@ -1,7 +1,6 @@
 MODE=$1
 
 workingDir=`pwd`
-
 includeDir="$workingDir/thirdparty/include"
 srcFiles="src/base/gettime.cpp                          \
           src/base/cpu.cpp                              \
@@ -19,14 +18,14 @@ libs="$libDir/libgtest.so $libDir/libtcmalloc.a -lpthread"
 outputDir="build/"
 target="$outputDir/unittest"
 parameters="-Wall -std=c++11 -I$workingDir -I$includeDir $libs"
-if [ $MODE == "DEBUG" ]; then
-    parameters=$parameters" -DDEBUG "
+if [ $MODE ] && [ $MODE == "DEBUG" ]; then
+    parameters=$parameters" -DDEBUG -g"
 else
     parameters=$parameters" -O2 "
 fi
 
 g++ -o $target $allFiles $parameters
 
-for lib in $libs; do
-    cp $lib $outputDir
-done
+# for lib in $libs; do
+    # cp $lib $outputDir
+# done

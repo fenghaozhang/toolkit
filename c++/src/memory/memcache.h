@@ -1,7 +1,8 @@
-#ifndef _SRC_MEMORY_MEMPOOL_H
-#define _SRC_MEMORY_MEMPOOL_H
+#ifndef _SRC_MEMORY_MEMCACHE_H
+#define _SRC_MEMORY_MEMCACHE_H
 
 #include <assert.h>
+#include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -10,60 +11,114 @@
 #include "src/base/intrusive_list.h"
 #include "src/common/macro.h"
 
-#define MIN_PAGE_SIZE (64 * 1024)
-
-struct ItemHeader
+struct MemCacheOptions
 {
-    ItemHeader* next;
+    std::string name;
+    void (*ctor)(void* obj);
+    void (*dtor)(void* obj);
+    uint32_t objSize;
+    uint32_t limit;
+    uint32_t reserved;
 
-    ItemHeader(): next(NULL) {}
+    MemCacheOptions()
+        : name("unamed_obj_cache"),
+          ctor(NULL),
+          dtor(NULL),
+          objSize(0),
+          limit(INT_MAX),
+          reserved(16)
+    {
+    }
 };
 
-struct PageHeader
+struct MemCacheStat
 {
-    ItemHeader* freeList;
-    uint32_t freeCount;
-    LinkNode node;
+    std::string name;
+    uint32_t pages;
+    uint32_t pageSize;
+    uint32_t itemSize;
+    uint32_t objSize;
+    uint32_t objCount;
+    uint32_t objPerPage;
+    uint32_t reservedPages;
+    uint32_t maxReservedPages;
 
-    PageHeader() : freeList(NULL), freeCount(0) {}
-
-    void* Alloc();
-    void Dealloc(void* ptr);
-} __attribute__((aligned(64)));
+    MemCacheStat()
+        : pages(0), pageSize(0), itemSize(0),
+          objSize(0), objCount(0), objPerPage(0),
+          reservedPages(0), maxReservedPages(0)
+    {
+    }
+};
 
 class MemCache
 {
 public:
-    explicit MemCache(size_t objSize);
-    ~MemCache();
+    typedef MemCacheOptions Options;
+
+    MemCache();
+    virtual ~MemCache();
+
+    /** NOTE: Must call Init() before allocation */
+    void Init(const Options& options);
+
+    /** Get stat of memcache */
+    void Stat(MemCacheStat* options);
 
     void* Alloc();
     void  Dealloc(void* ptr);
 
 private:
-    PageHeader* initPage(void* page);
-    void createFreePage();
+    struct PageHeader;
+
+    void freeCache();
+    void createPage();
+    void freePage(PageHeader* page);
+    void freeAllPages();
     void adjustPageAtAlloc(PageHeader* page);
     void adjustPageAtDealloc(PageHeader* page);
+    PageHeader* initPage(void* page);
     PageHeader* findPage(void* ptr);
     PageHeader* findOrCreatePage();
+    void* allocObj(PageHeader* page) const;
+    void  deallocObj(PageHeader* page, void* ptr) const;
+    void addToGlobalList();
+    void removeFromGlobalList();
 
+private:
+    struct ItemHeader
+    {
+        ItemHeader* next;
+    };
+
+    struct PageHeader
+    {
+        ItemHeader* freeList;
+        uint32_t usedCount;
+        uint32_t freeCount;
+        LinkNode node;
+    } __attribute__((aligned(64)));
     typedef IntrusiveList<PageHeader, &PageHeader::node> PageList;
-    PageList mFreePages;
+    PageList mEmptyPages;
     PageList mPartialPages;
     PageList mFullPages;
 
-    const size_t mMaxItems;
-    const size_t mItemSize;
-    const size_t mPageSize;
+    Options  mOptions;
+    bool     mIsInited;
+    uint32_t mPages;
+    uint32_t mPageSize;
+    uint32_t mItems;
+    uint32_t mItemSize;
+    uint32_t mItemsPerPage;
+    uint32_t mReservedPages;
+    uint32_t mMaxReservedPages;
+
+    LinkNode mNode;
+    typedef IntrusiveList<MemCache, &MemCache::mNode> CacheList;
+    static CacheList sInstanceList;
+    static pthread_mutex_t* sInstanceLock;
 
     DISALLOW_COPY_AND_ASSIGN(MemCache);
 };
 
-template <typename obj>
-class ObjPool : public MemCache
-{
-    // TODO(allen.zfh): do something
-};
-
-#endif  // _SRC_MEMORY_MEMPOOL_H
+#endif  // _SRC_MEMORY_MEMCACHE_H

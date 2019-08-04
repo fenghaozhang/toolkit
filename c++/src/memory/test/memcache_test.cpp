@@ -45,7 +45,10 @@ TEST_F(MemCacheFixture, Simple)
     std::vector<Item> trainingSets;
     std::vector<Item*> validateSets;
     srand((unsigned)time(NULL));
-    MemCache pool(sizeof(Item));
+    MemCache::Options options;
+    options.objSize = sizeof(Item);
+    MemCache pool;
+    pool.Init(options);
 
     uint64_t start = GetCurrentTimeInUs();
     int rounds = 1UL * 10000000;

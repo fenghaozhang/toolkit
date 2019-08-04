@@ -5,6 +5,9 @@
     TypeName(const TypeName&);              \
 void operator=(const TypeName&);
 
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+
 #define LIKELY(x)   __builtin_expect(!!(x), 1)
 #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
@@ -26,9 +29,9 @@ void operator=(const TypeName&);
         ++it)
 
 #define FOREACH_SAFE(it, container)                                     \
-    for (decltype((container).begin()) it, __tmp = (container).begin(); \
-        (it = __tmp) != (container).end();                              \
-        ++__tmp)
+    for (decltype((container).begin()) it, tmp = (container).begin(); \
+        ((it = tmp) != (container).end()) && (++tmp, true);           \
+        /* no-op */)
 
 #define ABORT()                                                         \
     do {                                                                \

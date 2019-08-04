@@ -1,7 +1,6 @@
 #ifndef _SRC_MEMORY_MEMPOOL_H
 #define _SRC_MEMORY_MEMPOOL_H
 
-#include "src/base/call_traits.h"
 #include "src/common/macro.h"
 
 class MemPool
@@ -18,7 +17,6 @@ public:
     }
 
     template <typename T, typename Arg1>
-    // T* New(typename call_traits<Arg1>::param_type arg1)
     T* New(const Arg1& arg1)
     {
         return new T(arg1);

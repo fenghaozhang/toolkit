@@ -13,10 +13,10 @@
             }                                           \
         } while (false);
 
-#ifdef DEBUG_MODE
+#ifdef DEBUG
 #define ASSERT_DEBUG(x)     ASSERT(x)
 #else
 #define ASSERT_DEBUG(x)
-#endif  // DEBUG_MODE
+#endif  // DEBUG
 
 #endif  // _SRC_COMMON_MACRO_H
