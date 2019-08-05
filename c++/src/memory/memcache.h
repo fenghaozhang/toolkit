@@ -18,7 +18,7 @@ struct MemCacheOptions
     void (*dtor)(void* obj);
     uint32_t objSize;
     uint32_t limit;
-    uint32_t reserved;
+    uint32_t reserve;
 
     MemCacheOptions()
         : name("unamed_obj_cache"),
@@ -26,7 +26,7 @@ struct MemCacheOptions
           dtor(NULL),
           objSize(0),
           limit(INT_MAX),
-          reserved(16)
+          reserve(16)
     {
     }
 };
@@ -69,6 +69,7 @@ public:
     void  Dealloc(void* ptr);
 
 private:
+    friend class MemCacheTest_FreeAllPages_Test;
     struct PageHeader;
 
     void freeCache();
@@ -80,6 +81,7 @@ private:
     PageHeader* initPage(void* page);
     PageHeader* findPage(void* ptr);
     PageHeader* findOrCreatePage();
+    void freeUnfreeObjects(PageHeader* page);
     void* allocObj(PageHeader* page) const;
     void  deallocObj(PageHeader* page, void* ptr) const;
     void addToGlobalList();

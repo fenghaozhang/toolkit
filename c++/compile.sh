@@ -9,6 +9,7 @@ srcFiles="src/base/gettime.cpp                          \
 testFiles="src/base/test/intrusive_list_test.cpp        \
            src/base/test/intrusive_heap_test.cpp        \
            src/memory/test/memcache_test.cpp            \
+           src/memory/test/objcache_test.cpp            \
            test/unittest/main.cpp"
 allFiles="$srcFiles $testFiles"
 
@@ -18,10 +19,10 @@ libs="$libDir/libgtest.so $libDir/libtcmalloc.a -lpthread"
 outputDir="build/"
 target="$outputDir/unittest"
 parameters="-Wall -std=c++11 -I$workingDir -I$includeDir $libs"
-if [ $MODE ] && [ $MODE == "DEBUG" ]; then
-    parameters=$parameters" -DDEBUG -g"
-else
+if [ $MODE ] && [ $MODE == "release" ]; then
     parameters=$parameters" -O2 "
+else
+    parameters=$parameters" -DDEBUG -g"
 fi
 
 g++ -o $target $allFiles $parameters

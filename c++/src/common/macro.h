@@ -1,5 +1,5 @@
-#ifndef _SRC_MACRO_H
-#define _SRC_MACRO_H
+#ifndef _SRC_COMMON_MACRO_H
+#define _SRC_COMMON_MACRO_H
 
 #define DISALLOW_COPY_AND_ASSIGN(TypeName)  \
     TypeName(const TypeName&);              \
@@ -39,4 +39,4 @@ void operator=(const TypeName&);
         abortptr();                                                      \
     } while (false)
 
-#endif  // _SRC_MACRO_H
+#endif  // _SRC_COMMON_MACRO_H

@@ -1,5 +1,5 @@
-#ifndef _SRC_COMMON_MACRO_H
-#define _SRC_COMMON_MACRO_H
+#ifndef _SRC_COMMON_ASSERT_H
+#define _SRC_COMMON_ASSERT_H
 
 #include <assert.h>
 
@@ -19,4 +19,4 @@
 #define ASSERT_DEBUG(x)
 #endif  // DEBUG
 
-#endif  // _SRC_COMMON_MACRO_H
+#endif  // _SRC_COMMON_ASSERT_H

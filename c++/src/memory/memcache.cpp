@@ -1,6 +1,7 @@
 #include "src/memory/memcache.h"
 
 #include <malloc.h>
+#include <unordered_set>
 
 #include "src/common/assert.h"
 #include "src/common/macro.h"
@@ -57,11 +58,10 @@ void MemCache::Init(const Options& options)
     {
         mPageSize *= 2;
     }
-    mItemsPerPage = (mPageSize - sizeof(PageHeader)) / mItemSize;
     ASSERT(IsPowerOfTwo(mPageSize));
-    ASSERT(mOptions.reserved <= mOptions.limit);
-    mMaxReservedPages =
-        (mOptions.reserved + mItemsPerPage - 1) / mItemsPerPage;
+    mItemsPerPage = (mPageSize - sizeof(PageHeader)) / mItemSize;
+    uint32_t reservedObjs = MIN(mOptions.reserve, mOptions.limit);
+    mMaxReservedPages = (reservedObjs + mItemsPerPage - 1) / mItemsPerPage;
     for (uint32_t i = 0; i < mMaxReservedPages; ++i)
     {
         createPage();
@@ -81,7 +81,7 @@ void* MemCache::Alloc()
     }
     if (mItems >= mOptions.limit)
     {
-        ASSERT_DEBUG(false);
+        // TODO(allen.zfh): Add warning log
         return NULL;
     }
     ++mItems;
@@ -120,11 +120,6 @@ void MemCache::freeCache()
 {
     if (UNLIKELY(mIsInited))
     {
-        if (UNLIKELY(mItems > 0))
-        {
-            ASSERT_DEBUG(false);
-            // TODO(allen.zfh) : warning
-        }
         freeAllPages();
         removeFromGlobalList();
     }
@@ -139,9 +134,40 @@ void MemCache::createPage()
     ++mPages;
 }
 
+void MemCache::freeUnfreeObjects(PageHeader* page)
+{
+    if (mOptions.dtor == NULL)
+    {
+        return;
+    }
+    std::unordered_set<ItemHeader*> freeItems;
+    ItemHeader* item = page->freeList;
+    while (item != NULL)
+    {
+        freeItems.insert(item);
+        item = item->next;
+    }
+    char* pos = reinterpret_cast<char*>(page + 1);
+    for (uint32_t i = 0; i < mItemsPerPage; ++i)
+    {
+        item = reinterpret_cast<ItemHeader*>(pos);
+        pos += mItemSize;
+        if (freeItems.find(item) == freeItems.end())
+        {
+            mOptions.dtor(item);
+            --mItems;
+        }
+    }
+}
+
 void MemCache::freePage(PageHeader* page)
 {
-    ASSERT_DEBUG(page->usedCount == 0 && page->freeCount == mItemsPerPage);
+    if (UNLIKELY(page->usedCount != 0))
+    {
+        // It's possible user forgets to free memory explicitly
+        // TODO(allen.zfh) : warning
+        freeUnfreeObjects(page);
+    }
     page->node.Unlink();
     free(page);
     --mPages;
@@ -150,9 +176,6 @@ void MemCache::freePage(PageHeader* page)
 void MemCache::freeAllPages()
 {
     PageList pages;
-    ASSERT_DEBUG(mEmptyPages.size() == mReservedPages);
-    ASSERT_DEBUG(mPartialPages.empty());
-    ASSERT_DEBUG(mFullPages.empty());
     pages.splice(pages.end(), mEmptyPages.begin(), mEmptyPages.end());
     pages.splice(pages.end(), mPartialPages.begin(), mPartialPages.end());
     pages.splice(pages.end(), mFullPages.begin(), mFullPages.end());
@@ -163,9 +186,9 @@ void MemCache::freeAllPages()
     {
         freePage(&*iter);
     }
-    mItems = 0;
-    mReservedPages = 0;
+    ASSERT_DEBUG(mItems == 0);
     ASSERT_DEBUG(mPages == 0);
+    ASSERT_DEBUG(mReservedPages <= mMaxReservedPages);
 }
 
 void MemCache::adjustPageAtAlloc(PageHeader* page)
@@ -272,7 +295,6 @@ void MemCache::deallocObj(PageHeader* page, void* ptr) const
         mOptions.dtor(ptr);
     }
     ItemHeader* item = static_cast<ItemHeader*>(ptr);
-    ASSERT_DEBUG(item->next != NULL);
     item->next = page->freeList;
     page->freeList = item;
     ++page->freeCount;
