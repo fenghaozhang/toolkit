@@ -1,8 +1,7 @@
-#include "src/base/intrusive_list.h"
-
 #include <gtest/gtest.h>
 #include <algorithm>
 
+#include "src/base/intrusive_list.h"
 #include "src/common/macro.h"
 
 #define EXPECT_LIST_EQ(list, ...)                         \

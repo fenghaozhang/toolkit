@@ -1,5 +1,3 @@
-// Copyright (c) 2017, Alibaba Inc. All rights reserved.
-
 #include <queue>
 #include <vector>
 #include <gtest/gtest.h>

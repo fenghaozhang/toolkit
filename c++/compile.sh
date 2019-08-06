@@ -8,6 +8,9 @@ srcFiles="src/base/gettime.cpp                          \
           src/memory/memcache.cpp"
 testFiles="src/base/test/intrusive_list_test.cpp        \
            src/base/test/intrusive_heap_test.cpp        \
+           src/base/test/intrusive_rbtree_test.cpp      \
+           src/base/test/intrusive_map_test.cpp         \
+           src/base/test/intrusive_hash_map_test.cpp    \
            src/memory/test/memcache_test.cpp            \
            src/memory/test/objcache_test.cpp            \
            test/unittest/main.cpp"
