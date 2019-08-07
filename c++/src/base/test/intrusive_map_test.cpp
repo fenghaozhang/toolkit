@@ -114,7 +114,7 @@ void IntrusiveMapTest(
                 }
                 else
                 {
-                    int count = rand() % keySet.size();
+                    int count = rand() % keySet.size(); // NOLINT
                     std::set<int>::iterator iter = keySet.begin();
                     for (int j = 0; j < count; ++j)
                     {
@@ -211,7 +211,7 @@ void IntrusiveMapTest(
         int count = map->erase(key);
         if (exist)
         {
-            EXPECT_TRUE(count == 1);
+            EXPECT_EQ(count, 1);
             typename NodeAllocator::NodeType* node =
                 nodeAlloc->GetPtrFromRef(&(*iter));
             EXPECT_EQ(node->key, key);
@@ -219,7 +219,7 @@ void IntrusiveMapTest(
         }
         else
         {
-            EXPECT_TRUE(count == 0);
+            EXPECT_EQ(count, 0);
             EXPECT_EQ(map->end(), iter);
         }
         map->validate_map();

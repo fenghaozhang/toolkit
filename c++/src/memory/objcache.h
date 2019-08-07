@@ -39,7 +39,6 @@ ObjectCache<T>::ObjectCache(
 template <typename T>
 ObjectCache<T>::~ObjectCache()
 {
-
 }
 
 template <typename T>

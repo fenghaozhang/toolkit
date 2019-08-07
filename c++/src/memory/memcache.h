@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <list>
+#include <string>
 
 #include "src/base/intrusive_list.h"
 #include "src/common/macro.h"

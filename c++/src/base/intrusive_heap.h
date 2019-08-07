@@ -1,6 +1,8 @@
 #ifndef _SRC_BASE_INTRUSIVE_HEAP_H
 #define _SRC_BASE_INTRUSIVE_HEAP_H
 
+#include <functional>
+#include <utility>
 #include <vector>
 
 #include "src/common/assert.h"
@@ -62,7 +64,6 @@ class IntrusiveHeap
 {
     typedef HeapNode* element_type;
 public:
-
     /**
      * Construct an empty heap whose initial capacity is zero.
      */
@@ -125,7 +126,7 @@ private:
         return *MemberToObject(mArray[index], M);
     }
 
-    size_t getIndex(T& obj) const
+    size_t getIndex(const T& obj) const
     {
         size_t index = (obj.*M).mIndex;
         ASSERT_DEBUG(index < mCount && index != HeapNode::INVALID_INDEX);

@@ -155,11 +155,11 @@ TEST(IntrusiveListTest, Erase)
         e[i].value = i;
         a.push_back(&e[i]);
     }
-    decltype (a.begin()) it = a.begin();
+    decltype(a.begin()) it = a.begin();
     std::advance(it, 5);
     a.erase(it, it);
     EXPECT_LIST_EQ(a, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-    decltype (a.begin()) eit = it;
+    decltype(a.begin()) eit = it;
     ++eit;
     a.erase(it, eit);
     EXPECT_LIST_EQ(a, 0, 1, 2, 3, 4, 6, 7, 8, 9);
@@ -178,9 +178,9 @@ TEST(IntrusiveListTest, Link)
         e[i].value = i;
         a.push_back(&e[i]);
     }
-    decltype (a.begin()) it = a.begin();
+    decltype(a.begin()) it = a.begin();
     std::advance(it, 5);
-    decltype (a.begin()) eit = it;
+    decltype(a.begin()) eit = it;
     ++eit;
     a.link(it, eit);
     EXPECT_LIST_EQ(a, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);

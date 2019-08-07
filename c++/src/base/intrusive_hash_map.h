@@ -4,8 +4,8 @@
 // As we need long template parameters, it affects code readability if we
 // limit line length to 80 characters.
 
-#include <tr1/functional>
 #include <utility>
+#include <tr1/functional>
 #include "src/base/intrusive_list.h"
 #include "src/common/assert.h"
 #include "src/common/macro.h"

@@ -18,10 +18,10 @@ void operator=(const TypeName&);
 
 #define CONTAINER_OF(ptr, type, member)                                 \
     ({                                                                  \
-     decltype(reinterpret_cast<type*>(0)->member)* __mptr = (ptr);      \
-     reinterpret_cast<type*>(reinterpret_cast<char*>(__mptr) -          \
-         OFFSET_OF(type, member));                                      \
-     })
+        decltype(reinterpret_cast<type*>(0)->member)* __mptr = (ptr);      \
+        reinterpret_cast<type*>(reinterpret_cast<char*>(__mptr) -          \
+            OFFSET_OF(type, member));                                      \
+    })
 
 #define FOREACH(it, container)                                          \
     for (decltype((container).begin()) it = (container).begin();        \

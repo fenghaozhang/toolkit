@@ -4,6 +4,7 @@ workingDir=`pwd`
 includeDir="$workingDir/thirdparty/include"
 srcFiles="src/base/gettime.cpp                          \
           src/base/cpu.cpp                              \
+          src/common/errorcode.cpp                      \
           src/common/logging.cpp                        \
           src/memory/memcache.cpp"
 testFiles="src/base/test/intrusive_list_test.cpp        \

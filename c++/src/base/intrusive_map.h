@@ -1,6 +1,9 @@
 #ifndef _SRC_BASE_INTRUSIVE_MAP_H
 #define _SRC_BASE_INTRUSIVE_MAP_H
 
+#include <functional>
+#include <utility>
+
 #include "src/base/intrusive_rbtree.h"
 #include "src/common/macro.h"
 

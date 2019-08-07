@@ -3,13 +3,15 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <algorithm>
+#include <functional>
 #include <iostream>
 #include <string>
 #include <utility>
 
-#include "src/common/macro.h"
 #include "src/common/assert.h"
 #include "src/common/common.h"
+#include "src/common/macro.h"
 
 struct IntrusiveRBTreeNode
 {
@@ -601,7 +603,7 @@ private:
                 ASSERT_DEBUG(parent != NULL);
                 IntrusiveRBTreeNode** parentRef = parent->parent == NULL ?
                     &mRoot : parent->parent->child(parent->isL);
-                ASSERT_DEBUG(*parent->child(!isL)== NULL);
+                ASSERT_DEBUG(*parent->child(!isL) == NULL);
                 _insert_node(parentRef, parent->child(!isL), node);
             }
         }

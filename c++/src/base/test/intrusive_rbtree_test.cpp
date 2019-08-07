@@ -1,12 +1,12 @@
-#include "src/base/intrusive_map.h"
-#include "src/base/intrusive_rbtree.h"
+#include <gtest/gtest.h>
 
 #include <algorithm>
 #include <map>
 #include <set>
 #include <vector>
 
-#include <gtest/gtest.h>
+#include "src/base/intrusive_map.h"
+#include "src/base/intrusive_rbtree.h"
 
 struct TestNode
 {

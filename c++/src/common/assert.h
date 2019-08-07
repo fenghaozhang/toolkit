@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#include "logging.h"
+#include "src/common/logging.h"
 
 #define ASSERT(x)                                       \
         do {                                            \
@@ -18,5 +18,9 @@
 #else
 #define ASSERT_DEBUG(x)
 #endif  // DEBUG
+
+template<bool> struct CompileTimeAssert;
+template<> struct CompileTimeAssert<true> {};
+#define STATIC_ASSERT(e) (CompileTimeAssert <(e) != 0>())
 
 #endif  // _SRC_COMMON_ASSERT_H

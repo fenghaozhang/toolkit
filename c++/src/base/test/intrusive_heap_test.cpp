@@ -1,6 +1,7 @@
+#include <gtest/gtest.h>
+
 #include <queue>
 #include <vector>
-#include <gtest/gtest.h>
 
 #include "src/base/intrusive_heap.h"
 #include "src/base/intrusive_list.h"
@@ -141,11 +142,11 @@ TEST_F(IntrusiveHeapTest, Erase)
     Record* lastRecord = NULL;
     for (size_t i = 0; i < 2048; ++i)
     {
-        int value = rand();    // NOLINT(runtime/threadsafe_fn)
+        int value = rand();     // NOLINT(runtime/threadsafe_fn)
         Record* record = pool.New<Record>(value);
         heap.push(record);
         lastRecord = record;
-        if (rand() % 3 == 0)
+        if (rand() % 3 == 0)    // NOLINT(runtime/threadsafe_fn)
         {
             toBeDeleted.push_back(record);
         }
