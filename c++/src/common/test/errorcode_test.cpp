@@ -4,5 +4,5 @@
 
 TEST(ErrorCodeTest, Simple)
 {
-    EXPECT_EQ(GetErrorString(TEST), "TEST");
+    EXPECT_EQ(GetErrorString(UNIT_TEST), "For unit test");
 }

@@ -30,7 +30,7 @@ const std::string GetErrorMessage(int errorCode)
 {
     STATIC_ASSERT(sizeof(ErrorCodeInfo) == 32);
 
-    uint32_t pos = static_cast<uint32_t>(errorCode % MAX_ERROR_CODE_MOD);
+    uint32_t pos = static_cast<uint32_t>(errorCode) % MAX_ERROR_CODE_MOD;
     ErrorCodeInfo* ptr = NULL;
     do {
         ptr = &sErrorCodeIndex[pos];
@@ -47,7 +47,7 @@ const std::string GetErrorMessage(int errorCode)
 
 void AddErrorMessage(int errorCode, const std::string& symbol, const std::string& message)
 {
-    uint32_t pos = static_cast<uint32_t>(errorCode % MAX_ERROR_CODE_MOD);
+    uint32_t pos = static_cast<uint32_t>(errorCode) % MAX_ERROR_CODE_MOD;
     ErrorCodeInfo* head = &sErrorCodeIndex[pos];
 
     LightSpinLock::Locker lock(head->lock);

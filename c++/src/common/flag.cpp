@@ -4,12 +4,7 @@
 #include <stdexcept>
 #include <ctype.h>
 
-#include "apsara/build_info.h"
-#include "apsara/common/flag.h"
-#include "apsara/common/json.h"
-#include "apsara/common/logging.h"
-#include "apsara/common/string_tools.h"
-#include "apsara/common/safeguard.h"
+#include "src/common/flag.h"
 
 using std::string;
 using std::cout;
@@ -17,7 +12,7 @@ using std::cerr;
 using std::endl;
 
 /* class FlagRepository::FlagDescriptor */
-namespace apsara { namespace GlobalFlag
+namespace GlobalFlag
 {
     // TODO: This method could be entirely updated as a call to
     // proper method in string_tools when it is ready.
@@ -173,88 +168,8 @@ namespace apsara { namespace GlobalFlag
         throw std::logic_error(
                 "Duplicate creation. "
                 "Should be detected by compiler.");
-#if IMPLEMENTED_ALTERNATIVELY // these errors won't be reached at runtime.
-        RuntimeExistError(fd.mFile, fd.mLine, fd.mFlagType, it->second);
-#endif
         return -1;
     }
-
-#if IMPLEMENTED_ALTERNATIVELY // these error won't be reached at runtime.
-    /* runtime exception. Most of them are supposed to be designed so
-     * that the error occurs at compiling or linking stage instead of
-     * runtime.
-     */
-    void FlagRepository::RuntimeExistError(
-            const char *file, const int line,
-            const FlagType usedAs,
-            const FlagDescriptor& fd
-            )
-    {
-        LOG_ERROR_BEGIN(
-                        apsara::logging::GetLogger("/apsara/globalflag",
-                                                  LOG_LEVEL_ERROR));
-            LOG_FIELD("type", "Runtime Flag Already-Exist Error");
-            LOG_FIELD("flagName", fd.mName );
-            LOG_FIELD("definedFile", fd.mFile);
-            LOG_FIELD("definedLine", fd.mLine);
-            LOG_FIELD("definedType",
-                FlagDescriptor::strTypename[
-                    static_cast<const int>(fd.mFlagType)]);
-            LOG_FIELD("redefinedFile", file);
-            LOG_FIELD("redefinedLine", line);
-            LOG_FIELD("redefinedType",
-                FlagDescriptor::strTypename[
-                    static_cast<const int>(usedAs)]);
-        LOG_ERROR_END;
-        apsara::logging::FlushLog();
-        exit(-1);
-    }
-
-    void FlagRepository::RuntimeTypeError(
-            const char *usefile, const int useline,
-            const FlagType usedAs,
-            const FlagDescriptor& fd
-            )
-    {
-        LOG_ERROR_BEGIN(apsara::logging::GetLogger("/apsara/globalflag",
-                                                  LOG_LEVEL_ERROR))
-            LOG_FIELD("type", "Runtime Flag Type-Check Error");
-            LOG_FIELD("flagName", fd.mName );
-            LOG_FIELD("definedFile", fd.mFile);
-            LOG_FIELD("definedLine", fd.mLine);
-            LOG_FIELD("definedType",
-                FlagDescriptor::strTypename[
-                    static_cast<const int>(fd.mFlagType)]);
-            LOG_FIELD("usedFile", usefile);
-            LOG_FIELD("usedLine", useline);
-            LOG_FIELD("usedType",
-                FlagDescriptor::strTypename[
-                    static_cast<const int>(usedAs)]);
-        LOG_ERROR_END;
-        apsara::logging::FlushLog();
-        exit(-1);
-    }
-
-    void FlagRepository::RuntimeNotFoundError(
-            const char *usefile, const int useline,
-            const FlagType usedAs,
-            const string& name
-            )
-    {
-        LOG_ERROR_BEGIN(apsara::logging::GetLogger("/apsara/globalflag",
-                                                  LOG_LEVEL_ERROR))
-            LOG_FIELD("type", "Runtime Flag Not-Found Error:");
-            LOG_FIELD("flagName", name );
-            LOG_FIELD("usedFile", usefile);
-            LOG_FIELD("usedLine", useline);
-            LOG_FIELD("usedType",
-                FlagDescriptor::strTypename[
-                    static_cast<const int>(usedAs)]);
-        LOG_ERROR_END;
-        apsara::logging::FlushLog();
-        exit(-1);
-    }
-#endif
 
     void FlagRepository::SetFlag(const apsara::json::JsonMap& flags)
     {
@@ -266,23 +181,14 @@ namespace apsara { namespace GlobalFlag
             FlagMapType::iterator it2 = GetFlagIterator(flagName);
             if (it2 == end())
             {
-                LOG_ERROR(apsara::logging::GetLogger("/apsara/flag"),
-                          ("Cause", "Unknown flag is asked to be set")
-                          ("Flag", flagName));
                 continue;
             }
             if (flagName == "production" && apsara::security::SecurityFlag::HasFreeze())
             {
-                LOG_ERROR(apsara::logging::GetLogger("/apsara/flag"),
-                          ("Cause", "This flag has already been set")
-                          ("Flag", flagName));
                 continue;
             }
             else if (flagName == "disable_validator" && apsara::security::SecurityFlag::GetFreeze())
             {
-                LOG_ERROR(apsara::logging::GetLogger("/apsara/flag"),
-                          ("Cause", "This flag has been freezed")
-                          ("Flag", flagName));
                 continue;
             }
             FlagDescriptor& fd = it2->second;
@@ -332,7 +238,7 @@ namespace apsara { namespace GlobalFlag
     bool FlagRepository::SetFlag2(const string& name, const string& value)
     {
         FlagMapType::iterator it = GetFlagIterator(name);
-        if (it == end()) 
+        if (it == end())
             return false;
         if (name == "production" && apsara::security::SecurityFlag::HasFreeze())
         {
@@ -391,7 +297,7 @@ namespace apsara { namespace GlobalFlag
         case DOUBLE: *static_cast<double *>(fd.mpData) = info.mValue.d;       break;
         case INT32:  *static_cast<int32_t *>(fd.mpData) = info.mValue.i;      break;
         case INT64:  *static_cast<int64_t *>(fd.mpData) = info.mValue.l;      break;
-        case STRING: 
+        case STRING:
         {
             if ((static_cast<std::string *>(fd.mpData))->compare(info.mValue.s) != 0)
             {
@@ -457,11 +363,13 @@ namespace apsara { namespace GlobalFlag
         for (int i = 0; i < argc; ++i)
         {
             string u(argv[i]);
-            if (u == "--buildinfo")
-            {
-                DumpBuildInfo(std::cout);
-                exit(0);
-            }
+            /*
+             * if (u == "--buildinfo")
+             * {
+             *     DumpBuildInfo(std::cout);
+             *     exit(0);
+             * }
+             */
             if (u == "--flaghelp")
             {
                 DumpAll(std::cout);
@@ -501,11 +409,13 @@ namespace apsara { namespace GlobalFlag
         for (int i = 0; i < argc; ++i)
         {
             string u(argv[i]);
-            if (u == "--buildinfo")
-            {
-                DumpBuildInfo(std::cout);
-                exit(0);
-            }
+            /*
+             * if (u == "--buildinfo")
+             * {
+             *     DumpBuildInfo(std::cout);
+             *     exit(0);
+             * }
+             */
             if (u == "--flaghelp")
             {
                 DumpAll(std::cout);
@@ -894,6 +804,4 @@ namespace apsara { namespace GlobalFlag
     } // end of Dump(..)
 #endif
 
-}} // end of namespace apsara::GlobalFlag
-
-
+} // namespace GlobalFlag

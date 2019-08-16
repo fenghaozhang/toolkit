@@ -3,13 +3,11 @@
 
 #include <assert.h>
 
-#include "src/common/logging.h"
-
 #define ASSERT(x)                                       \
         do {                                            \
             if (UNLIKELY(!(x)))                         \
             {                                           \
-                FlushLog(); assert(x);                  \
+                assert(x);                              \
             }                                           \
         } while (false);
 
