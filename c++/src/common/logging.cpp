@@ -1,12 +1,12 @@
 #include "src/common/logging.h"
 
-#include <tr1/unordered_map>
-#include <sys/stat.h>
-#include <stdarg.h>
-#include <time.h>
 #include <dlfcn.h>
-
+#include <stdarg.h>
+#include <sys/stat.h>
+#include <time.h>
 #include <google/protobuf/message.h>
+
+#include <tr1/unordered_map>
 
 #include "src/common/assert.h"
 #include "src/common/flag.h"
@@ -15,11 +15,13 @@
 #include "src/sync/atomic.h"
 #include "src/sync/lock.h"
 
-#include "include/pangu_routine_thread_pool.h"
+#include "include/routine_thread_pool.h"
 
 DECLARE_FLAG_BOOL(common_EnableApsaraLoggingSystem);
 DECLARE_FLAG_BOOL(common_AutoInitLoggingSystem);
 DECLARE_FLAG_BOOL(common_EnableAsyncLogging);
+
+// GLOBAL_NOLINT
 
 struct GZlib
 {
@@ -107,7 +109,7 @@ static ILoggingSystem* GetApsaraLoggingSystem()
     std::map<std::string, ILoggingSystem*>* logsystemMap
         = GetNameToLoggingSystemMap();
     ScopedMicroRWLock lock(sRWLock, 'r');
-    typeof (logsystemMap->end()) it = logsystemMap->find("apsara");
+    typeof(logsystemMap->end()) it = logsystemMap->find("apsara");
     if (it != logsystemMap->end())
     {
         return it->second;
@@ -117,7 +119,7 @@ static ILoggingSystem* GetApsaraLoggingSystem()
 
 static LogLevelIndex ConvertLogLevelToLogLevelIndex(LogLevel level)
 {
-    int quot = (uint32_t)(level) / 100;
+    int quot = static_cast<uint32_t>(level) / 100;
     if (LIKELY(quot < LOG_LEVEL_INDEX_NONE
                 && sLogLevelDict[quot].level == level))
     {
@@ -125,7 +127,7 @@ static LogLevelIndex ConvertLogLevelToLogLevelIndex(LogLevel level)
     }
     fprintf(stderr, "Oops, %s:%u %s logging bugs happend, level:%u,"
             " report as INFO!!!!\n",
-            __FILE__, __LINE__, __FUNCTION__, (int)(level));
+            __FILE__, __LINE__, __FUNCTION__, static_cast<int>(level));
     ASSERT_DEBUG(false);
     return LOG_LEVEL_INDEX_INFO; // cannot happens;
 }
@@ -467,7 +469,7 @@ void Logger::AddAdaptor(ILoggerAdaptor* adaptor)
     ILoggerAdaptor** nextList = adaptorList + 1;
     if (*nextList != NULL)
     {
-        while(*nextList != NULL)
+        while (*nextList != NULL)
         {
             ++nextList;
         }
@@ -576,7 +578,7 @@ LogMaker::LogMaker(Logger* logger, const char* filename, int line,
     mLineCodeSize = snprintf(data, sizeof(data), ":%d]", mLogHeader.line);
     mLineCode = *reinterpret_cast<uint64_t*>(data);
 
-    mHeaderNoTidLen = mFileNameLen + 
+    mHeaderNoTidLen = mFileNameLen +
         sprintf(data, "[%d-%02d-%02d %02d:%02d:%02d.%06d]\t[%s]\t[%s]\t[:%d]\t",
                 1970, 1, 1, 0, 0, 0, 0, sLogLevelDict[mLogLevelIndex].symbol,
                 "", mLogHeader.line);

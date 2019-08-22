@@ -7,6 +7,8 @@
 
 #include "src/common/macro.h"
 
+// GLOBAL_NOLINT
+
 #define DECLARE_SLOGGER(logger, key)    \
     static Logger* logger = Logger::GetLogger(key)
 
@@ -150,7 +152,7 @@ protected:
 class ILoggingSystem
 {
 public:
-    ILoggingSystem(const std::string& name);
+    explicit ILoggingSystem(const std::string& name);
     virtual ~ILoggingSystem();
 
     /*
@@ -1001,7 +1003,7 @@ struct StaticLogMakerCreator
             return *makerptr;
         }
         LogMaker* t = new LogMaker(logger, file, line, func, level);
-        if (!__sync_bool_compare_and_swap(makerptr, (LogMaker*)NULL, t))
+        if (!__sync_bool_compare_and_swap(makerptr, static_cast<LogMaker*>(NULL), t))
         {
             delete t;
         }

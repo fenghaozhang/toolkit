@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef PANGU2_COMMON_STRING_DMG_FP_DMG_FP_H
-#define PANGU2_COMMON_STRING_DMG_FP_DMG_FP_H
+#ifndef _SRC_STRING_DMG_FP_DMG_FP_H
+#define _SRC_STRING_DMG_FP_DMG_FP_H
 
 namespace dmg_fp {
 
@@ -27,4 +27,4 @@ char* g_fmt(char* b, double x);
 
 }  // namespace dmg_fp
 
-#endif // PANGU2_COMMON_STRING_DMG_FP_DMG_FP_H
+#endif // _SRC_STRING_DMG_FP_DMG_FP_H

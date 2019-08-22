@@ -1,5 +1,5 @@
-#ifndef PANGU2_COMMON_STRING_STRING_UTIL_H
-#define PANGU2_COMMON_STRING_STRING_UTIL_H
+#ifndef _SRC_STRING_STRING_UTIL_H
+#define _SRC_STRING_STRING_UTIL_H
 
 #include <stdint.h>
 #include <string>
@@ -311,4 +311,4 @@ std::string StringPrintf(const char* fmt, ...) __attribute__((format(printf, 1, 
  */
 void StringAppendF(std::string* out, const char* fmt, ...) __attribute__((format(printf, 2, 3)));
 
-#endif  // PANGU2_COMMON_STRING_STRING_UTIL_H
+#endif  // _SRC_STRING_STRING_UTIL_H

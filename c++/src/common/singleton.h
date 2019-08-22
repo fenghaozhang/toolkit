@@ -1,15 +1,8 @@
-// Copyright (c) 2014, Alibaba Inc.
-// All right reserved.
-//
-// Author: DongPing HUANG <dongping.huang@alibaba-inc.com>
-// Created: 2014/06/16
-// Description:
+#ifndef _SRC_COMMON_SINGLETON_H
+#define _SRC_COMMON_SINGLETON_H
 
-#ifndef STONE_MEMORY_SINGLETON_H
-#define STONE_MEMORY_SINGLETON_H
-
-#include "common2/stone/memory/uncopyable.h"
-#include "common2/stone/threading/sync/lock.h"
+#include "src/common/uncopyable.h"
+#include "src/sync/lock.h"
 
 // Don't use singleton whenever you have another chioce.
 //
@@ -19,10 +12,6 @@
 // If you absolutely need a singleton, please keep them as trivial as possible
 // and ideally a leaf dependency. Singletons get problematic when they attempt
 // to do too much in their destructor or have circular dependencies.
-
-namespace apsara {
-namespace pangu {
-namespace stone {
 
 template<typename T>
 class Singleton : private stone::Uncopyable
@@ -68,8 +57,4 @@ T* volatile Singleton<T>::sInstance = NULL;
 template<typename T>
 bool Singleton<T>::sDestroyed = false;
 
-} // namespace stone
-} // namespace pangu
-} // namespace apsara
-
-#endif // STONE_MEMORY_SINGLETON_H
+#endif // _SRC_COMMON_SINGLETON_H

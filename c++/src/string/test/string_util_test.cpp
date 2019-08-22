@@ -1,8 +1,9 @@
+#include <limits.h>
+#include <math.h>
+
 #include <gtest/gtest.h>
 #include <iostream>
-#include <limits.h>
 #include <limits>
-#include <math.h>
 
 #include "src/string/string_util.h"
 
@@ -801,17 +802,17 @@ TEST(StringNumberConversionsTest, HexEncode) {
 //
 //     start = stone::GetTimeStampInMs();
 //     for (int i = 0; i < kCount; ++i) {
-//         result = apsara::ToString(kDouble);
+//         result = ToString(kDouble);
 //     }
 //     end = stone::GetTimeStampInMs();
-//     // int64_t apsaraTime = end - start;
-//     // std::cout << "Apsara version time(ms): " << end - start << std::endl;
+//     // int64_t time = end - start;
+//     // std::cout << "Version time(ms): " << end - start << std::endl;
 //     EXPECT_EQ(kString, result);
 //
-//     // ASSERT_LT(chromiumTime, apsaraTime);
+//     // ASSERT_LT(chromiumTime, time);
 // }
 //
-// TEST(StingToDoublePerfTest, FasterThanApsara)
+// TEST(StingToDoublePerfTest, Faster)
 // {
 //     const int kCount = 100000;
 //     const char* kString = "43.423145256667";
@@ -827,13 +828,13 @@ TEST(StringNumberConversionsTest, HexEncode) {
 //
 //     start = stone::GetTimeStampInMs();
 //     for (int i = 0; i < kCount; ++i) {
-//         result = apsara::StringTo<double>(kString);
+//         result = StringTo<double>(kString);
 //     }
 //     end = stone::GetTimeStampInMs();
-//     // int64_t apsaraTime = end - start;
-//     // std::cout << "Apsara version time(ms): " << end - start << std::endl;
+//     // int64_t time = end - start;
+//     // std::cout << "Version time(ms): " << end - start << std::endl;
 //
-//     // ASSERT_LT(chromiumTime, apsaraTime);
+//     // ASSERT_LT(chromiumTime, time);
 // }
 
 TEST(StringBoolConversionTest, StringToBool)
@@ -945,7 +946,7 @@ TEST(StringPrintfTest, StringAppendF)
 
 TEST(StringPrintfTest, InvalidParameter1)
 {
-    EXPECT_STREQ(StringPrintf(NULL).c_str(), "");
+    EXPECT_STREQ(StringPrintf(NULL).c_str(), "");   // NOLINT(runtime/printf)
 }
 
 TEST(StringPrintfTest, InvalidParameter2)

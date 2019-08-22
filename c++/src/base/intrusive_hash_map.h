@@ -4,8 +4,8 @@
 // As we need long template parameters, it affects code readability if we
 // limit line length to 80 characters.
 
+#include <functional>
 #include <utility>
-#include <tr1/functional>
 #include "src/base/intrusive_list.h"
 #include "src/common/assert.h"
 #include "src/common/macro.h"
@@ -53,7 +53,7 @@ template<typename Key,
          typename Value,
          Key Value::*KeyMember,
          LinkNode Value::*LinkMember,
-         typename Hash = std::tr1::hash<Key>,
+         typename Hash = std::hash<Key>,
          typename Equal = std::equal_to<Key> >
 class IntrusiveHashMap
 {

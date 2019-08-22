@@ -9,7 +9,7 @@ DEFINE_FLAG_BOOL(LoggingPerformanceTestDisableApsaraTest, "", false);
 DECLARE_SLOGGER(sLogger, "./common/test/logging_test");
 
 static apsara::logging::Logger* sApsaraLogger =
-    apsara::logging::GetLogger("./common/unittest/pangu_logging_unittest");
+    apsara::logging::GetLogger("./common/unittest/logging_unittest");
 
 class ScreenLoggerAdaptor : public ILoggerAdaptor
 {
@@ -17,8 +17,8 @@ public:
     ScreenLoggerAdaptor() {}
     ~ScreenLoggerAdaptor() {}
 
-    /*override*/ void AppendLog(const apsara::pangu::LoggingHeader& header,
-            RefCountedLoggingData* loggingData)
+    /*override*/ void AppendLog(const LoggingHeader& header,
+                                RefCountedLoggingData* loggingData)
     {
         write(STDERR_FILENO, loggingData->data(), loggingData->size());
         loggingData->Release();
@@ -47,14 +47,14 @@ private:
     ScreenLoggerAdaptor mScreenLoggerAdaptor;
 };
 
-class PanguLoggingTest: public apsara::UnitTestFixtureBase<PanguLoggingTest>
+class LoggingTest: public apsara::UnitTestFixtureBase<LoggingTest>
 {
 public:
-    APSARA_UNIT_TEST_CASE(TestPanguLogging, 10240);
-    APSARA_UNIT_TEST_CASE(TestPanguLoggingAdaptor, 10240);
+    APSARA_UNIT_TEST_CASE(TestLogging, 10240);
+    APSARA_UNIT_TEST_CASE(TestLoggingAdaptor, 10240);
 
 public:
-    void TestPanguLogging()
+    void TestLogging()
     {
         uint64_t chunkVersion = 0x4123456789abcdefULL;
         uint64_t logicalLength = 63 * 1024 * 1024;
@@ -69,14 +69,14 @@ public:
         uint32_t checksum = 0x12345678;
         uint32_t checksumLength = 4096;
         uint64_t checksumTimestamps = apsara::common::GetCurrentTimeInUs();
-        int32_t chunkStatus = PANGU_CHUNKSERVER_CHECKSUM_REPLICA_ERROR;
+        int32_t chunkStatus = 1;
         uint32_t ssdDiskId = INVALID_DISK_ID;
         uint32_t accessCount = 0;
         std::string function = __FUNCTION__;
 
-        uint64_t loopCnt = INT64_FLAG(PanguLoggingPerformanceTestNumber);
+        uint64_t loopCnt = INT64_FLAG(LoggingPerformanceTestNumber);
         // apsara logging
-        if (!BOOL_FLAG(PanguLoggingPerformanceTestDisableApsaraTest))
+        if (!BOOL_FLAG(LoggingPerformanceTestDisableApsaraTest))
         {
             uint64_t start = apsara::common::GetCurrentTimeInUs();
             for (size_t idx = 0; idx < loopCnt; ++idx)
@@ -106,7 +106,6 @@ public:
 
         apsara::logging::FlushLog();
 
-        // pangu logging
         {
             uint64_t start = apsara::common::GetCurrentTimeInUs();
             for (size_t idx = 0; idx < loopCnt; ++idx)
@@ -129,15 +128,15 @@ public:
                         ("AccessCnt", accessCount));
             }
             uint64_t end = apsara::common::GetCurrentTimeInUs();
-            fprintf(stderr, ">>> Pangu Logging: Latency: %luns, QPS: %lu\n",
+            fprintf(stderr, ">>> Logging: Latency: %luns, QPS: %lu\n",
                     (end - start) * 1000UL / loopCnt,
                     loopCnt * 1000000UL / (end - start));
         }
 
-        sleep(INT64_FLAG(PanguLoggingPerformanceTestSleepTime));
+        sleep(INT64_FLAG(LoggingPerformanceTestSleepTime));
     }
 
-    void TestPanguLoggingAdaptor()
+    void TestLoggingAdaptor()
     {
         ScreenLoggingSystem* loggingSystem = new ScreenLoggingSystem;
         RegisterLoggingSystem(loggingSystem);

@@ -32,8 +32,10 @@
   code is generated in case of a 32 bit platform.
 */
 
-#include <x86intrin.h>
+// GLOBAL_NOLINT
+
 #include <stdint.h>
+#include <x86intrin.h>
 
 #define CRCtriplet(crc, buf, offset)                                     \
     crc ## 0 = __builtin_ia32_crc32di(crc ## 0, *(buf ## 0 + offset));   \

@@ -41,7 +41,7 @@ const std::string GetErrorMessage(int errorCode)
         pos = ptr->next;
     } while (pos != 0);
     char buffer[64];
-    snprintf(buffer, sizeof(buffer), "Unknown_Pangu_Error_%d", errorCode);
+    snprintf(buffer, sizeof(buffer), "Unknown_Error_%d", errorCode);
     return buffer;
 }
 

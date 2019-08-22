@@ -20,13 +20,6 @@
         }                                                 \
     } while (0)
 
-namespace apsara
-{
-namespace pangu
-{
-namespace
-{
-
 struct Bar
 {
     int value;
@@ -294,7 +287,3 @@ TEST(IntrusiveListTest, SwapTest)
     EXPECT_TRUE(it == right.end());
 }
 #endif  // 0
-
-}  // namespace
-}  // namespace pangu
-}  // namespace apsara

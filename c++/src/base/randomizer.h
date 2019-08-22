@@ -6,10 +6,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-namespace apsara {
-namespace pangu {
-namespace stone {
-
 class Randomizer
 {
 public:
@@ -70,4 +66,4 @@ inline uint64_t Randomizer::RandUInt64()
     return (static_cast<uint64_t>(hi) << 32) | lo;
 }
 
-#endif // _SRC_BASE_RANDOMIZER_H
+#endif  // _SRC_BASE_RANDOMIZER_H
