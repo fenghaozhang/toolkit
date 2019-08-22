@@ -30,7 +30,7 @@ parameters="-Wall -std=c++11 -I$workingDir -I$includeDir $libs"
 if [ $MODE ] && [ $MODE == "release" ]; then
     parameters=$parameters" -O2 "
 else
-    parameters=$parameters" -DDEBUG -g"
+    parameters=$parameters" -D__DEBUG__ -g"
 fi
 
 g++ -o $target $allFiles $parameters

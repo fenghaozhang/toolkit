@@ -11,11 +11,11 @@
             }                                           \
         } while (false);
 
-#ifdef DEBUG
+#ifdef __DEBUG__
 #define ASSERT_DEBUG(x)     ASSERT(x)
 #else
 #define ASSERT_DEBUG(x)
-#endif  // DEBUG
+#endif  // __DEBUG__
 
 template<bool> struct CompileTimeAssert;
 template<> struct CompileTimeAssert<true> {};

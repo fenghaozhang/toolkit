@@ -836,7 +836,7 @@ class FileInfo:
     while d and d != "/":
       if os.path.isfile(d + "/BLADE_ROOT"):
           return d
-      if os.path.isfile(d + "/makefile"):
+      if os.path.isfile(d + "/Makefile"):
           return d
       d = os.path.dirname(d)
     return ""

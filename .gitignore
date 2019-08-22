@@ -1,0 +1,9 @@
+*.o
+*.pyc
+*.swp
+*.swn
+*.swo
+tags
+cscope.*
+c++/build/
+c++/Makefile

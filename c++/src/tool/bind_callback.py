@@ -21,9 +21,9 @@ namespace bind_callback_details
 const uint64_t BIND_CALLBACK_MAGIC        = 0x4c4c4143444e4942ULL;  // "BINDCALL"
 const uint64_t BIND_CALLBACK_FREED_OBJECT = 0x4c4c414345455246ULL;  // "FREECALL"
 
-#ifndef NDEBUG
+#ifdef __DEBUG__
 void CheckMagic(uint64_t magic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
 
 }  // namespace bind_callback_details
 
@@ -141,9 +141,9 @@ def write_callback_mp(m, r):
     print
     print '    ~%s()' % class_name
     print '    {'
-    print '#ifndef NDEBUG'
+    print '#ifdef __DEBUG__'
     print '         bind_callback_details::CheckMagic(mMagic);'
-    print '#endif  // NDEBUG'
+    print '#endif  // __DEBUG__'
     print '         mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;'
     print '    }'
     print
@@ -153,9 +153,9 @@ def write_callback_mp(m, r):
         print '    void Bind(Class* object, Method method, %s)' % ', '.join(
                 ['typename call_traits<Arg%d>::param_type arg%d' % (i, i) for i in xrange(m)])
     print '    {'
-    print '#ifndef NDEBUG'
+    print '#ifdef __DEBUG__'
     print '        bind_callback_details::CheckMagic(mMagic);'
-    print '#endif  // NDEBUG'
+    print '#endif  // __DEBUG__'
     print '        mObject = object;'
     print '        mMethod = method;'
     for i in xrange(m):
@@ -164,9 +164,9 @@ def write_callback_mp(m, r):
     print
     print '    /* override */ void Run()'
     print '    {'
-    print '#ifndef NDEBUG'
+    print '#ifdef __DEBUG__'
     print '        bind_callback_details::CheckMagic(mMagic);'
-    print '#endif  // NDEBUG'
+    print '#endif  // __DEBUG__'
     print '        (mObject->*mMethod)(%s);' % ', '.join(
             ['mArg%d' % i for i in xrange(m)] + ['this->mResult%d' % i for i in xrange(r)])
     print '    }'

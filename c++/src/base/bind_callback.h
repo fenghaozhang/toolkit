@@ -13,9 +13,9 @@ namespace bind_callback_details
 const uint64_t BIND_CALLBACK_MAGIC        = 0x4c4c4143444e4942ULL;  // "BINDCALL"
 const uint64_t BIND_CALLBACK_FREED_OBJECT = 0x4c4c414345455246ULL;  // "FREECALL"
 
-#ifndef NDEBUG
+#ifdef __DEBUG__
 void CheckMagic(uint64_t magic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
 
 }  // namespace bind_callback_details
 
@@ -150,26 +150,26 @@ public:
 
     ~BindCallbackM0()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
     }
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)();
     }
 
@@ -189,26 +189,26 @@ public:
 
     ~BindCallbackM0R1()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
     }
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(this->mResult0);
     }
 
@@ -228,26 +228,26 @@ public:
 
     ~BindCallbackM0R2()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
     }
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(this->mResult0, this->mResult1);
     }
 
@@ -267,26 +267,26 @@ public:
 
     ~BindCallbackM0R3()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
     }
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(this->mResult0, this->mResult1, this->mResult2);
     }
 
@@ -306,17 +306,17 @@ public:
 
     ~BindCallbackM1()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -324,9 +324,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0);
     }
 
@@ -347,17 +347,17 @@ public:
 
     ~BindCallbackM1R1()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -365,9 +365,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, this->mResult0);
     }
 
@@ -388,17 +388,17 @@ public:
 
     ~BindCallbackM1R2()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -406,9 +406,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, this->mResult0, this->mResult1);
     }
 
@@ -429,17 +429,17 @@ public:
 
     ~BindCallbackM1R3()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -447,9 +447,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, this->mResult0, this->mResult1, this->mResult2);
     }
 
@@ -470,17 +470,17 @@ public:
 
     ~BindCallbackM2()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -489,9 +489,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1);
     }
 
@@ -513,17 +513,17 @@ public:
 
     ~BindCallbackM2R1()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -532,9 +532,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1, this->mResult0);
     }
 
@@ -556,17 +556,17 @@ public:
 
     ~BindCallbackM2R2()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -575,9 +575,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1, this->mResult0, this->mResult1);
     }
 
@@ -599,17 +599,17 @@ public:
 
     ~BindCallbackM2R3()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -618,9 +618,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1, this->mResult0, this->mResult1, this->mResult2);
     }
 
@@ -642,17 +642,17 @@ public:
 
     ~BindCallbackM3()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1, typename call_traits<Arg2>::param_type arg2)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -662,9 +662,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1, mArg2);
     }
 
@@ -687,17 +687,17 @@ public:
 
     ~BindCallbackM3R1()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1, typename call_traits<Arg2>::param_type arg2)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -707,9 +707,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1, mArg2, this->mResult0);
     }
 
@@ -732,17 +732,17 @@ public:
 
     ~BindCallbackM3R2()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1, typename call_traits<Arg2>::param_type arg2)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -752,9 +752,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1, mArg2, this->mResult0, this->mResult1);
     }
 
@@ -777,17 +777,17 @@ public:
 
     ~BindCallbackM3R3()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
          bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
          mMagic = bind_callback_details::BIND_CALLBACK_FREED_OBJECT;
     }
 
     void Bind(Class* object, Method method, typename call_traits<Arg0>::param_type arg0, typename call_traits<Arg1>::param_type arg1, typename call_traits<Arg2>::param_type arg2)
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         mObject = object;
         mMethod = method;
         mArg0 = arg0;
@@ -797,9 +797,9 @@ public:
 
     /* override */ void Run()
     {
-#ifndef NDEBUG
+#ifdef __DEBUG__
         bind_callback_details::CheckMagic(mMagic);
-#endif  // NDEBUG
+#endif  // __DEBUG__
         (mObject->*mMethod)(mArg0, mArg1, mArg2, this->mResult0, this->mResult1, this->mResult2);
     }
 
