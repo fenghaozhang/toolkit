@@ -5,7 +5,7 @@
 #include <sys/time.h>
 
 #include "src/base/cpu.h"
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 
 static bool gUseTsc = false;
 

@@ -287,7 +287,7 @@ class GTEST_API_ KilledBySignal {
 //
 // Parameters:
 //   statement -  A statement that a macro such as EXPECT_DEATH would test
-//                for program termination. This macro has to make sure this
+//                for program termination. This macros.has to make sure this
 //                statement is compiled but not executed, to ensure that
 //                EXPECT_DEATH_IF_SUPPORTED compiles with a certain
 //                parameter iff EXPECT_DEATH compiles with it.

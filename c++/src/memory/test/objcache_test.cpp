@@ -102,7 +102,7 @@ TEST(ObjectCacheTest, TestReserve)
 {
     ObjectCache<TestObject> pool;
     MemCacheStat stats;
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     EXPECT_EQ(1UL, stats.pages);
 }
 
@@ -111,18 +111,18 @@ TEST(ObjectCacheTest, TestGrowShrink)
     ObjectCache<int> pool;
     std::vector<int*> mem;
     MemCacheStat stats;
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     uint32_t reservedPages = stats.reservedPages;
     do
     {
         mem.push_back(reinterpret_cast<int*>(pool.Alloc()));
-        pool.Stat(&stats);
+        pool.GetStats(&stats);
     } while (stats.pages < 10UL);
     for (size_t i = 0; i < mem.size(); i++)
     {
         pool.Dealloc(mem[i]);
     }
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     EXPECT_EQ(reservedPages, stats.pages);
 }
 

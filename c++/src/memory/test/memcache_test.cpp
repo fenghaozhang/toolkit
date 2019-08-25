@@ -144,7 +144,7 @@ TEST(MemCacheTest, TestReserve)
     options.reserve = 1;
     pool.Init(options);
     MemCacheStat stats;
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     EXPECT_EQ(1UL, stats.pages);
 }
 
@@ -157,18 +157,18 @@ TEST(MemCacheTest, TestGrowShrink)
     pool.Init(options);
     std::vector<int*> mem;
     MemCacheStat stats;
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     EXPECT_EQ(0UL, stats.reservedPages);
     do
     {
         mem.push_back(reinterpret_cast<int*>(pool.Alloc()));
-        pool.Stat(&stats);
+        pool.GetStats(&stats);
     } while (stats.pages < 10UL);
     for (size_t i = 0; i < mem.size(); i++)
     {
         pool.Dealloc(mem[i]);
     }
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     EXPECT_EQ(0UL, stats.pages);
 }
 
@@ -180,7 +180,7 @@ TEST(MemCacheTest, TestReserveMore)
     options.reserve = 64 * 1024;
     pool.Init(options);
     MemCacheStat stats;
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     EXPECT_LE(options.reserve / stats.objPerPage, stats.reservedPages);
     EXPECT_EQ(stats.reservedPages, stats.pages);
 }
@@ -206,7 +206,7 @@ TEST(MemCacheTest, FreeAllPages)
     pool.freeAllPages();
     EXPECT_EQ(TestItem::sConstructorCalls, TestItem::sDestructorCalls);
     MemCacheStat stats;
-    pool.Stat(&stats);
+    pool.GetStats(&stats);
     EXPECT_EQ(0, stats.pages);
     EXPECT_EQ(0, stats.objCount);
 }

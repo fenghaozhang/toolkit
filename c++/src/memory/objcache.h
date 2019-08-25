@@ -1,7 +1,7 @@
 #ifndef _SRC_MEMORY_OBJCACHE_H
 #define _SRC_MEMORY_OBJCACHE_H
 
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 #include "src/memory/memcache.h"
 
 template <typename T>
@@ -17,7 +17,7 @@ public:
     T* Alloc();
     void Dealloc(T* ptr);
 
-    void Stat(ObjectCacheStat* stat);
+    void GetStats(ObjectCacheStat* stat);
 
 private:
     void init(const char* const name, bool construct);
@@ -63,9 +63,9 @@ inline void ObjectCache<T>::Dealloc(T* obj)
 }
 
 template <typename T>
-inline void ObjectCache<T>::Stat(ObjectCacheStat* stat)
+inline void ObjectCache<T>::GetStats(ObjectCacheStat* stat)
 {
-    mMemCache.Stat(stat);
+    mMemCache.GetStats(stat);
 }
 
 template <typename T>

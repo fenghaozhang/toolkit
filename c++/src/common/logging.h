@@ -5,7 +5,7 @@
 #include <string>
 #include <tr1/type_traits>
 
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 
 // GLOBAL_NOLINT
 

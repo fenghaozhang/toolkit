@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 
 const double DEFAULT_CPU_MHZ = 2500;
 static const char* gCpuInfo = "/proc/cpuinfo";

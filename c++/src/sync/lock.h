@@ -4,7 +4,7 @@
 #include <pthread.h>
 
 #include "src/base/gettime.h"
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 #include "src/sync/atomic.h"
 #include "src/thread/selfthread.h"
 

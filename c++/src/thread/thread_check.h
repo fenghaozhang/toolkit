@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 
 inline static void CheckPthreadError(int status)
 {

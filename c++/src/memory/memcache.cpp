@@ -4,7 +4,7 @@
 #include <unordered_set>
 
 #include "src/common/assert.h"
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 #include "src/math/math.h"
 
 static const size_t MIN_PAGE_SIZE = 64 * 1024;
@@ -103,7 +103,7 @@ void MemCache::Dealloc(void* ptr)
     adjustPageAtDealloc(page);
 }
 
-void MemCache::Stat(MemCacheStat* stat)
+void MemCache::GetStats(MemCacheStat* stat) const
 {
     stat->name = mOptions.name;
     stat->pages = mPages;
@@ -134,10 +134,11 @@ void MemCache::createPage()
     ++mPages;
 }
 
-void MemCache::freeUnfreeObjects(PageHeader* page)
+void MemCache::freeObjects(PageHeader* page)
 {
     if (mOptions.dtor == NULL)
     {
+        mItems = 0;
         return;
     }
     std::unordered_set<ItemHeader*> freeItems;
@@ -166,7 +167,7 @@ void MemCache::freePage(PageHeader* page)
     {
         // It's possible user forgets to free memory explicitly
         // TODO(allen.zfh) : warning
-        freeUnfreeObjects(page);
+        freeObjects(page);
     }
     page->node.Unlink();
     free(page);

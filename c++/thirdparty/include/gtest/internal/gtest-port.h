@@ -62,7 +62,7 @@
 // macros in this list will be defined to either 1 or 0.
 //
 // Notes to maintainers:
-//   - Each macro here is a user-tweakable knob; do not grow the list
+//   - Each macros.here is a user-tweakable knob; do not grow the list
 //     lightly.
 //   - Use #if to key off these macros.  Don't use #ifdef or "#if
 //     defined(...)", which will not work as these macros are ALWAYS

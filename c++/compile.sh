@@ -15,6 +15,7 @@ testFiles="src/base/test/intrusive_list_test.cpp        \
            src/base/test/intrusive_map_test.cpp         \
            src/base/test/intrusive_hash_map_test.cpp    \
            src/common/test/errorcode_test.cpp           \
+           src/memory/test/arena_test.cpp               \
            src/memory/test/memcache_test.cpp            \
            src/memory/test/objcache_test.cpp            \
            src/string/test/string_util_test.cpp         \

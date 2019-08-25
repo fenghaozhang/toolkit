@@ -10,7 +10,7 @@
 #include <string>
 
 #include "src/base/intrusive_list.h"
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 
 struct MemCacheOptions
 {
@@ -64,7 +64,7 @@ public:
     void Init(const Options& options);
 
     /** Get stat of memcache */
-    void Stat(MemCacheStat* options);
+    void GetStats(MemCacheStat* options) const;
 
     void* Alloc();
     void  Dealloc(void* ptr);
@@ -82,7 +82,7 @@ private:
     PageHeader* initPage(void* page);
     PageHeader* findPage(void* ptr);
     PageHeader* findOrCreatePage();
-    void freeUnfreeObjects(PageHeader* page);
+    void freeObjects(PageHeader* page);
     void* allocObj(PageHeader* page) const;
     void  deallocObj(PageHeader* page, void* ptr) const;
     void addToGlobalList();

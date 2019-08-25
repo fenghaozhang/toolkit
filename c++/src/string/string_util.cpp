@@ -9,7 +9,7 @@
 
 #include <limits>
 
-#include "src/common/macro.h"
+#include "src/common/macros.h"
 #include "src/string/dmg_fp/dmg_fp.h"
 
 namespace {
