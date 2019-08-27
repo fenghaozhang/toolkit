@@ -90,7 +90,11 @@ bool SparseBitMap::Get(size_t index) const
     ASSERT(index < sMaxCapacity);
     size_t mapIndex = index / mBitsPerMap;
     size_t offset = index % mBitsPerMap;
+<<<<<<< HEAD
     if (UNLIKELY(index >= mCapacity || mMaps[mapIndex] == NULL))
+=======
+    if (LIKELY(index < mCapacity && mMaps[mapIndex] != NULL))
+>>>>>>> Add SparseBitMap
     {
         return false;
     }
@@ -132,7 +136,11 @@ inline void SparseBitMap::allocMapIfNeeded(size_t index)
     {
         mMaps.resize(mapIndex + 1, NULL);
         mMaps[mapIndex] = allocBitMap();
+<<<<<<< HEAD
         mCapacity = index + 1;
+=======
+        mCapacity = (mapIndex + 1) * mBitsPerMap;
+>>>>>>> Add SparseBitMap
     }
     else if (UNLIKELY(mMaps[mapIndex] == NULL))
     {

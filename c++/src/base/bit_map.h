@@ -113,6 +113,10 @@ public:
 private:
     void allocMapIfNeeded(size_t index);
     BitMap* allocBitMap();
+<<<<<<< HEAD
+=======
+
+>>>>>>> Add SparseBitMap
     static size_t getBitsPerMap(size_t capacity);
     static const size_t sMaxCapacity = UINT32_MAX;
 
