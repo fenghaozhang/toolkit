@@ -35,7 +35,10 @@
 // GLOBAL_NOLINT
 
 #include <stdint.h>
+#include <string.h>
 #include <x86intrin.h>
+
+#include "src/common/macros.h"
 
 #define CRCtriplet(crc, buf, offset)                                     \
     crc ## 0 = __builtin_ia32_crc32di(crc ## 0, *(buf ## 0 + offset));   \
@@ -547,3 +550,426 @@ uint32_t docrc32c_intel(uint32_t crc, const void *buf, size_t len)
     }
     return crc32bit;
 };
+
+#define GF2_DIM 32      /* dimension of GF(2) vectors (length of CRC) */
+
+// These two inital arrays are calculated from PrecomputeInitEvenOdd().
+static const uint32_t init_odd[GF2_DIM] = {
+    0x105ec76f, 0x20bd8ede, 0x417b1dbc, 0x82f63b78,
+    0x00000001, 0x00000002, 0x00000004, 0x00000008,
+    0x00000010, 0x00000020, 0x00000040, 0x00000080,
+    0x00000100, 0x00000200, 0x00000400, 0x00000800,
+    0x00001000, 0x00002000, 0x00004000, 0x00008000,
+    0x00010000, 0x00020000, 0x00040000, 0x00080000,
+    0x00100000, 0x00200000, 0x00400000, 0x00800000,
+    0x01000000, 0x02000000, 0x04000000, 0x08000000
+};
+
+static const uint32_t init_even[GF2_DIM] = {
+    0x417b1dbc, 0x82f63b78, 0x00000001, 0x00000002,
+    0x00000004, 0x00000008, 0x00000010, 0x00000020,
+    0x00000040, 0x00000080, 0x00000100, 0x00000200,
+    0x00000400, 0x00000800, 0x00001000, 0x00002000,
+    0x00004000, 0x00008000, 0x00010000, 0x00020000,
+    0x00040000, 0x00080000, 0x00100000, 0x00200000,
+    0x00400000, 0x00800000, 0x01000000, 0x02000000,
+    0x04000000, 0x08000000, 0x10000000, 0x20000000
+};
+
+// These two inital arrays are calculated from PrecomputeInitEvenOdd4KB().
+// init_odd_4KB array is not used.
+static const uint32_t init_odd_4KB[GF2_DIM] = {
+    0xf7506984, 0xeb4ca5f9, 0xd3753d03, 0xa3060cf7,
+    0x43e06f1f, 0x87c0de3e, 0x0a6dca8d, 0x14db951a,
+    0x29b72a34, 0x536e5468, 0xa6dca8d0, 0x48552751,
+    0x90aa4ea2, 0x24b8ebb5, 0x4971d76a, 0x92e3aed4,
+    0x202b2b59, 0x405656b2, 0x80acad64, 0x04b52c39,
+    0x096a5872, 0x12d4b0e4, 0x25a961c8, 0x4b52c390,
+    0x96a58720, 0x28a778b1, 0x514ef162, 0xa29de2c4,
+    0x40d7b379, 0x81af66f2, 0x06b2bb15, 0x0d65762a
+};
+
+static const uint32_t init_even_4KB[GF2_DIM] = {
+    0xc2a5b65e, 0x80a71a4d, 0x04a2426b, 0x094484d6,
+    0x128909ac, 0x25121358, 0x4a2426b0, 0x94484d60,
+    0x2d7cec31, 0x5af9d862, 0xb5f3b0c4, 0x6e0b1779,
+    0xdc162ef2, 0xbdc02b15, 0x7e6c20db, 0xfcd841b6,
+    0xfc5cf59d, 0xfd559dcb, 0xff474d67, 0xfb62ec3f,
+    0xf329ae8f, 0xe3bf2bef, 0xc292212f, 0x80c834af,
+    0x047c1faf, 0x08f83f5e, 0x11f07ebc, 0x23e0fd78,
+    0x47c1faf0, 0x8f83f5e0, 0x1aeb9d31, 0x35d73a62
+};
+
+// The 8 arrays below are calculated from PrecomputeByteTable4KB().
+static const uint32_t byte_table_0_4KB[16] = {
+    0x00000000, 0xc2a5b65e, 0x80a71a4d, 0x4202ac13,
+    0x04a2426b, 0xc607f435, 0x84055826, 0x46a0ee78,
+    0x094484d6, 0xcbe13288, 0x89e39e9b, 0x4b4628c5,
+    0x0de6c6bd, 0xcf4370e3, 0x8d41dcf0, 0x4fe46aae,
+};
+
+static const uint32_t byte_table_1_4KB[16] = {
+    0x00000000, 0x128909ac, 0x25121358, 0x379b1af4,
+    0x4a2426b0, 0x58ad2f1c, 0x6f3635e8, 0x7dbf3c44,
+    0x94484d60, 0x86c144cc, 0xb15a5e38, 0xa3d35794,
+    0xde6c6bd0, 0xcce5627c, 0xfb7e7888, 0xe9f77124,
+};
+
+static const uint32_t byte_table_2_4KB[16] = {
+    0x00000000, 0x2d7cec31, 0x5af9d862, 0x77853453,
+    0xb5f3b0c4, 0x988f5cf5, 0xef0a68a6, 0xc2768497,
+    0x6e0b1779, 0x4377fb48, 0x34f2cf1b, 0x198e232a,
+    0xdbf8a7bd, 0xf6844b8c, 0x81017fdf, 0xac7d93ee,
+};
+
+static const uint32_t byte_table_3_4KB[16] = {
+    0x00000000, 0xdc162ef2, 0xbdc02b15, 0x61d605e7,
+    0x7e6c20db, 0xa27a0e29, 0xc3ac0bce, 0x1fba253c,
+    0xfcd841b6, 0x20ce6f44, 0x41186aa3, 0x9d0e4451,
+    0x82b4616d, 0x5ea24f9f, 0x3f744a78, 0xe362648a,
+};
+
+static const uint32_t byte_table_4_4KB[16] = {
+    0x00000000, 0xfc5cf59d, 0xfd559dcb, 0x01096856,
+    0xff474d67, 0x031bb8fa, 0x0212d0ac, 0xfe4e2531,
+    0xfb62ec3f, 0x073e19a2, 0x063771f4, 0xfa6b8469,
+    0x0425a158, 0xf87954c5, 0xf9703c93, 0x052cc90e,
+};
+
+static const uint32_t byte_table_5_4KB[16] = {
+    0x00000000, 0xf329ae8f, 0xe3bf2bef, 0x10968560,
+    0xc292212f, 0x31bb8fa0, 0x212d0ac0, 0xd204a44f,
+    0x80c834af, 0x73e19a20, 0x63771f40, 0x905eb1cf,
+    0x425a1580, 0xb173bb0f, 0xa1e53e6f, 0x52cc90e0,
+};
+
+static const uint32_t byte_table_6_4KB[16] = {
+    0x00000000, 0x047c1faf, 0x08f83f5e, 0x0c8420f1,
+    0x11f07ebc, 0x158c6113, 0x190841e2, 0x1d745e4d,
+    0x23e0fd78, 0x279ce2d7, 0x2b18c226, 0x2f64dd89,
+    0x321083c4, 0x366c9c6b, 0x3ae8bc9a, 0x3e94a335,
+};
+
+static const uint32_t byte_table_7_4KB[16] = {
+    0x00000000, 0x47c1faf0, 0x8f83f5e0, 0xc8420f10,
+    0x1aeb9d31, 0x5d2a67c1, 0x956868d1, 0xd2a99221,
+    0x35d73a62, 0x7216c092, 0xba54cf82, 0xfd953572,
+    0x2f3ca753, 0x68fd5da3, 0xa0bf52b3, 0xe77ea843,
+};
+
+static uint32_t gf2_matrix_times(const uint32_t* mat, uint32_t vec)
+{
+    uint32_t sum = 0;
+
+    while (vec)
+    {
+        if (vec & 1)
+            sum ^= *mat;
+        vec >>= 1;
+        mat++;
+    }
+    return sum;
+}
+
+static void gf2_matrix_square(uint32_t* square, uint32_t* mat)
+{
+    for (int n = 0; n < GF2_DIM; n++)
+        square[n] = gf2_matrix_times(mat, mat[n]);
+}
+
+static void PrecomputeInitEvenOdd()
+{
+    uint32_t even[GF2_DIM];    /* even-power-of-two zeros operator */
+    uint32_t odd[GF2_DIM];     /* odd-power-of-two zeros operator */
+
+    /* put operator for one zero bit in odd */
+    odd[0] = 0x82f63b78;          /* reversed polynomial for CRC32-C */
+
+    uint32_t row = 1;
+    for (int n = 1; n < GF2_DIM; n++)
+    {
+        odd[n] = row;
+        row <<= 1;
+    }
+
+    /* put operator for two zero bits in even */
+    gf2_matrix_square(even, odd);
+
+    /* put operator for four zero bits in odd */
+    gf2_matrix_square(odd, even);
+}
+
+static void PrecomputeInitEvenOdd4KB()
+{
+    uint32_t even[GF2_DIM];    /* even-power-of-two zeros operator */
+    uint32_t odd[GF2_DIM];     /* odd-power-of-two zeros operator */
+
+    memcpy(even, init_even, GF2_DIM * sizeof(uint32_t));
+    memcpy(odd, init_odd, GF2_DIM * sizeof(uint32_t));
+
+    gf2_matrix_square(even, odd);   // len2 4K  => 2K
+    gf2_matrix_square(odd, even);   // len2 2K  => 1K
+    gf2_matrix_square(even, odd);   // len2 1K  => 512
+    gf2_matrix_square(odd, even);   // len2 512 => 256
+    gf2_matrix_square(even, odd);   // len2 256 => 128
+    gf2_matrix_square(odd, even);   // len2 128 => 64
+    gf2_matrix_square(even, odd);   // len2 64  => 32
+    gf2_matrix_square(odd, even);   // len2 32  => 16
+    gf2_matrix_square(even, odd);   // len2 16  => 8
+    gf2_matrix_square(odd, even);   // len2 8   => 4
+    gf2_matrix_square(even, odd);   // len2 4   => 2
+    gf2_matrix_square(odd, even);   // len2 2   => 1
+    gf2_matrix_square(even, odd);   // len2 1
+}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+static void PrecomputeByteTable4KB()
+{
+    for (int i = 0; i < 8; ++i)
+    {
+        for (int j = 0; j <= 0xf; ++j)
+        {
+            uint32_t sum = 0;
+            uint32_t bit_pos = i * 4;
+            int t = j;
+            while (t > 0)
+            {
+                if (t & 1)
+                {
+                    sum ^= init_even_4KB[bit_pos];
+                }
+                t >>= 1;
+                ++bit_pos;
+            }
+        }
+    }
+}
+
+// Special case where len2 == 4096.
+uint32_t crc32c_combine_4KB(uint32_t crc1, uint32_t crc2)
+{
+    uint32_t sum = 0;
+    sum ^= byte_table_0_4KB[(crc1 & 0x0000000f) >> 0];
+    sum ^= byte_table_1_4KB[(crc1 & 0x000000f0) >> 4];
+    sum ^= byte_table_2_4KB[(crc1 & 0x00000f00) >> 8];
+    sum ^= byte_table_3_4KB[(crc1 & 0x0000f000) >> 12];
+    sum ^= byte_table_4_4KB[(crc1 & 0x000f0000) >> 16];
+    sum ^= byte_table_5_4KB[(crc1 & 0x00f00000) >> 20];
+    sum ^= byte_table_6_4KB[(crc1 & 0x0f000000) >> 24];
+    sum ^= byte_table_7_4KB[(crc1 & 0xf0000000) >> 28];
+    return sum ^ crc2;
+};
+#pragma GCC diagnostic pop
+
+uint32_t crc32c_combine_slow_for_test(
+        uint32_t crc1, uint32_t crc2, size_t len2)
+{
+    if (len2 == 4 * 1024)
+    {
+        return crc32c_combine_4KB(crc1, crc2);
+    }
+
+    uint32_t even[GF2_DIM];    /* even-power-of-two zeros operator */
+    uint32_t odd[GF2_DIM];     /* odd-power-of-two zeros operator */
+
+    /* degenerate case (also disallow negative lengths) */
+    if (len2 <= 0) return crc1;
+
+    memcpy(even, init_even, GF2_DIM * sizeof(uint32_t));
+    memcpy(odd, init_odd, GF2_DIM * sizeof(uint32_t));
+
+    /* apply len2 zeros to crc1 (first square will put the operator for one
+       zero byte, eight zero bits, in even) */
+    do
+    {
+        /* apply zeros operator for this bit of len2 */
+        gf2_matrix_square(even, odd);
+        if (len2 & 1)
+            crc1 = gf2_matrix_times(even, crc1);
+        len2 >>= 1;
+
+        /* if no more bits set, then done */
+        if (len2 == 0)
+            break;
+
+        /* another iteration of the loop with odd and even swapped */
+        gf2_matrix_square(odd, even);
+        if (len2 & 1)
+            crc1 = gf2_matrix_times(odd, crc1);
+        len2 >>= 1;
+
+        /* if no more bits set, then done */
+    } while (len2 != 0);
+
+    /* return combined crc */
+    crc1 ^= crc2;
+    return crc1;
+};
+
+// https://github.com/facebook/folly
+// https://github.com/facebook/folly/blob/master/folly/hash/detail/Crc32CombineDetail.cpp
+
+// Reduction taken from
+// https://www.nicst.de/crc.pdf
+//
+// This is an intrinsics-based implementation of listing 3.
+
+static const uint32_t crc32c_m = 0x82f63b78;
+
+static const uint32_t crc32c_powers[] = {
+    0x82f63b78, 0x6ea2d55c, 0x18b8ea18, 0x510ac59a, 0xb82be955, 0xb8fdb1e7,
+    0x88e56f72, 0x74c360a4, 0xe4172b16, 0x0d65762a, 0x35d73a62, 0x28461564,
+    0xbf455269, 0xe2ea32dc, 0xfe7740e6, 0xf946610b, 0x3c204f8f, 0x538586e3,
+    0x59726915, 0x734d5309, 0xbc1ac763, 0x7d0722cc, 0xd289cabe, 0xe94ca9bc,
+    0x05b74f3f, 0xa51e1f42, 0x40000000, 0x20000000, 0x08000000, 0x00800000,
+    0x00008000, 0x82f63b78, 0x6ea2d55c, 0x18b8ea18, 0x510ac59a, 0xb82be955,
+    0xb8fdb1e7, 0x88e56f72, 0x74c360a4, 0xe4172b16, 0x0d65762a, 0x35d73a62,
+    0x28461564, 0xbf455269, 0xe2ea32dc, 0xfe7740e6, 0xf946610b, 0x3c204f8f,
+    0x538586e3, 0x59726915, 0x734d5309, 0xbc1ac763, 0x7d0722cc, 0xd289cabe,
+    0xe94ca9bc, 0x05b74f3f, 0xa51e1f42, 0x40000000, 0x20000000, 0x08000000,
+    0x00800000, 0x00008000
+};
+
+static inline uint32_t gf_multiply_crc32c_hw(uint64_t crc1,
+        uint64_t crc2, uint32_t m)
+{
+    __m128i crc1_xmm = _mm_set_epi64x(0, crc1);
+    __m128i crc2_xmm = _mm_set_epi64x(0, crc2);
+    __m128i count    = _mm_set_epi64x(0, 1);
+    __m128i res0     = _mm_clmulepi64_si128(crc2_xmm, crc1_xmm, 0x00);
+    __m128i res1     = _mm_sll_epi64(res0, count);
+
+    // Use hardware crc32c to do reduction from 64 -> 32 bytes
+    uint64_t res2 = _mm_cvtsi128_si64(res1);
+    uint32_t res3 = _mm_crc32_u32(0, res2);
+    uint32_t res4 = _mm_extract_epi32(res1, 1);
+    return res3 ^ res4;
+}
+
+template <typename F>
+uint32_t crc32_append_zeroes(F mult, uint32_t crc,
+        size_t len, uint32_t polynomial)
+{
+    const uint32_t* powers = crc32c_powers;
+    // Append by multiplying by consecutive powers of two of the zeroes
+    // array
+    len >>= 2;
+
+    while (len) {
+        // Advance directly to next bit set.
+        int r = __builtin_ffsl(len) - 1;
+        len >>= r;
+        powers += r;
+
+        crc = mult(crc, *powers, polynomial);
+
+        len >>= 1;
+        powers++;
+    }
+
+    return crc;
+}
+
+static inline bool issse42_supported()
+{
+    const uint32_t bit_SSE4_2 = (1 << 20);
+
+    int level = 1;
+    uint64_t a, b, c, d;
+    asm ("xchg\t%%rbx, %1\n\t"
+         "cpuid\n\t"
+         "xchg\t%%rbx, %1\n\t"
+         :"=a"(a), "=r"(b), "=c"(c), "=d"(d)
+         :"0"(level));
+
+    return (c & bit_SSE4_2);
+}
+
+static inline uint32_t crc32c_combine_hw(uint32_t crc1,
+        uint32_t crc2, size_t crc2len)
+{
+    return crc2 ^
+        crc32_append_zeroes(
+                gf_multiply_crc32c_hw, crc1, crc2len, crc32c_m);
+}
+
+
+template <size_t N>
+struct Crc32MultiplyHelper
+{
+    static uint32_t Calc(uint32_t p, uint32_t a, uint32_t b, uint32_t m)
+        __attribute__((always_inline))
+    {
+        return Crc32MultiplyHelper<N + 1>::Calc(p ^ (-((b >> 31) & 1) & a),
+                (a >> 1) ^ (-(a & 1) & m), b << 1, m);
+    }
+};
+
+template <>
+struct Crc32MultiplyHelper<32>
+{
+    static uint32_t Calc(uint32_t p, uint32_t a, uint32_t b, uint32_t m)
+        __attribute__((always_inline))
+    {
+        return p;
+    }
+};
+
+static inline uint32_t gf_multiply_sw(uint32_t a, uint32_t b, uint32_t m)
+{
+    return Crc32MultiplyHelper<0>::Calc(0, a, b, m);
+}
+
+static inline uint32_t crc32c_combine_sw(uint32_t crc1, uint32_t crc2, size_t crc2len)
+{
+    return crc2 ^
+        crc32_append_zeroes(
+                gf_multiply_sw, crc1, crc2len, crc32c_m);
+}
+
+uint32_t crc32c_combine(uint32_t crc1, uint32_t crc2, size_t crc2len)
+{
+    if (crc2len == 4 * 1024)
+    {
+        return crc32c_combine_4KB(crc1, crc2);
+    }
+    size_t len = crc2len & 3;
+    if (len)
+    {
+        uint32_t data = 0;
+        crc1 = docrc32c_intel(crc1,
+                reinterpret_cast<uint8_t*>(&data), len);
+    }
+    if (LIKELY(issse42_supported()))
+    {
+        return crc32c_combine_hw(crc1, crc2, crc2len - len);
+    }
+    return crc32c_combine_sw(crc1, crc2, crc2len - len);
+}
+
+// Just for test
+uint32_t crc32c_combine_hw_for_test(
+        uint32_t crc1, uint32_t crc2, size_t crc2len)
+{
+    uint8_t data[4] = {0, 0, 0, 0};
+    size_t len = crc2len & 3;
+    if (len)
+    {
+        crc1 = docrc32c_intel(crc1, data, len);
+    }
+    return crc32c_combine_hw(crc1, crc2, crc2len - len);
+}
+
+uint32_t crc32c_combine_sw_for_test(
+        uint32_t crc1, uint32_t crc2, size_t crc2len)
+{
+    uint8_t data[4] = {0, 0, 0, 0};
+    size_t len = crc2len & 3;
+    if (len)
+    {
+        crc1 = docrc32c_intel(crc1, data, len);
+    }
+    return crc32c_combine_sw(crc1, crc2, crc2len - len);
+}
+
