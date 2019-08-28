@@ -8,7 +8,7 @@
 
 #include "src/common/assert.h"
 #include "src/common/macros.h"
-#include "src/memory/arena.h"
+#include "src/memory/mempool.h"
 
 class BitBase
 {
@@ -37,7 +37,7 @@ public:
 class BitMap
 {
 public:
-    explicit BitMap(size_t capacity, Arena* arena = NULL);
+    explicit BitMap(size_t capacity, MemPool* pool = NULL);
     ~BitMap();
 
     size_t Capacity() const
@@ -50,7 +50,7 @@ public:
         ASSERT(index < mCapacity);
         return BitBase::Get(mSlices, index);
     }
-    
+
     bool operator[](size_t index) const
     {
         ASSERT(index < mCapacity);
@@ -71,7 +71,7 @@ public:
 
     void Reset()
     {
-        memset(mSlices, 0, mSliceCount * 32);
+        memset(mSlices, 0, mSliceCount * sizeof(SliceType));
     }
 
     /** Return numbers of bit '1' */
@@ -87,7 +87,7 @@ private:
     const size_t mCapacity;
     const size_t mSliceBits;
     const size_t mSliceCount;
-    Arena* mArena;
+    MemPool* mPool;
 
     DISALLOW_COPY_AND_ASSIGN(BitMap);
 };
@@ -95,7 +95,7 @@ private:
 class SparseBitMap
 {
 public:
-    explicit SparseBitMap(size_t capacity = 0, Arena* arena = NULL);
+    explicit SparseBitMap(size_t capacity = 0, MemPool* pool = NULL);
     ~SparseBitMap();
 
     size_t Capacity() const;
@@ -113,16 +113,13 @@ public:
 private:
     void allocMapIfNeeded(size_t index);
     BitMap* allocBitMap();
-<<<<<<< HEAD
-=======
 
->>>>>>> Add SparseBitMap
     static size_t getBitsPerMap(size_t capacity);
-    static const size_t sMaxCapacity = UINT32_MAX;
+    static const size_t sMaxCapacity = UINT32_MAX;  // 4G
 
-    size_t mCapacity;
     size_t mBitsPerMap;
-    Arena* mArena;
+    size_t mCapacity;
+    MemPool* mPool;
     std::vector<BitMap*> mMaps;
 
     DISALLOW_COPY_AND_ASSIGN(SparseBitMap);

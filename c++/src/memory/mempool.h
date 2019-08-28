@@ -2,43 +2,61 @@
 #define _SRC_MEMORY_MEMPOOL_H
 
 #include "src/common/macros.h"
+#include "src/memory/memcache.h"
 
 class MemPool
 {
 public:
-    MemPool() { init(); }
+    explicit MemPool(size_t bufferSize = 4096);
 
-    ~MemPool() { destroy(); }
+    void* Alloc(size_t size);
+
+    void* AllocAligned(size_t size);
+
+    size_t GetMemoryUsage() const;
 
     template <typename T>
     T* New()
     {
-        return new T;
+        void* mem = Alloc(sizeof(T));
+        return new (mem) T;
     }
 
     template <typename T, typename Arg1>
     T* New(const Arg1& arg1)
     {
-        return new T(arg1);
+        void* mem = Alloc(sizeof(T));
+        return new (mem) T(arg1);
+    }
+
+    template <typename T, typename Arg1, typename Arg2>
+    T* New(const Arg1& arg1, const Arg2& arg2)
+    {
+        void* mem = Alloc(sizeof(T));
+        return new (mem) T(arg1, arg2);
+    }
+
+    template <typename T, typename Arg1, typename Arg2, typename Arg3>
+    T* New(const Arg1& arg1, const Arg2& arg2, const Arg3& arg3)
+    {
+        void* mem = Alloc(sizeof(T));
+        return new (mem) T(arg1, arg2, arg3);
+    }
+
+    template <typename T, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+    T* New(const Arg1& arg1, const Arg2& arg2, const Arg3& arg3, const Arg4& arg4)
+    {
+        void* mem = Alloc(sizeof(T));
+        return new (mem) T(arg1, arg2, arg3, arg4);
     }
 
 private:
-    void init();
-    void destroy();
+    char*              mPtr;
+    size_t             mBufferOffset;
+    size_t             mBufferSize;
+    MemCache           mMemCache;
 
     DISALLOW_COPY_AND_ASSIGN(MemPool);
 };
-
-void MemPool::init()
-{
-    // TODO(allen.zfh): do something
-    return;
-}
-
-void MemPool::destroy()
-{
-    // TODO(allen.zfh): do something
-    return;
-}
 
 #endif  // _SRC_MEMORY_MEMPOOL_H

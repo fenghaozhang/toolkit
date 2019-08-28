@@ -4,7 +4,7 @@
 #include "src/base/atomic_pointer.h"
 #include "src/common/macros.h"
 #include "src/math/randomizer.h"
-#include "src/memory/arena.h"
+#include "src/memory/mempool.h"
 
 template<typename Key, class Comparator>
 class SkipList
@@ -14,9 +14,9 @@ private:
 
 public:
     // Create a new SkipList object that will use "cmp" for comparing keys,
-    // and will allocate memory using "*arena".  Objects allocated in the arena
+    // and will allocate memory using memory pool. Objects allocated in pool
     // must remain allocated for the lifetime of the skiplist object.
-    explicit SkipList(Arena* arena);
+    explicit SkipList(MemPool* pool);
 
     // Insert key into the list.
     // REQUIRES: nothing that compares equal to key is currently in the list.
@@ -103,7 +103,7 @@ private:
 private:
     enum { kMaxHeight = 12 };
     Comparator mCompare;
-    Arena* const mArena;
+    MemPool* const mPool;
     Node* const mHead;
 
     // Modified only by Insert().
@@ -162,8 +162,7 @@ template<typename Key, class Comparator>
 typename SkipList<Key, Comparator>::Node*
 SkipList<Key, Comparator>::newHead(int height)
 {
-    void* mem = mArena->Alloc(sizeof(Key));
-    Key* key = new (mem) Key;
+    Key* key = mPool->New<Key>();
     return newNode(*key, height);
 }
 
@@ -171,7 +170,7 @@ template<typename Key, class Comparator>
 typename SkipList<Key, Comparator>::Node*
 SkipList<Key, Comparator>::newNode(const Key& key, int height)
 {
-    void* mem = mArena->AllocAligned(
+    void* mem = mPool->AllocAligned(
         sizeof(Node) + sizeof(AtomicPointer) * (height - 1));
     return new (mem) Node(key);
 }
@@ -348,8 +347,8 @@ SkipList<Key, Comparator>::findLast() const
 }
 
 template<typename Key, class Comparator>
-SkipList<Key, Comparator>::SkipList(Arena* arena)
-  : mArena(arena),
+SkipList<Key, Comparator>::SkipList(MemPool* pool)
+  : mPool(pool),
     mHead(newHead(kMaxHeight)),
     mMaxHeight(reinterpret_cast<void*>(1)),
     mRand(0xdeadbeef)

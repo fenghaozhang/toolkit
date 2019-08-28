@@ -233,8 +233,8 @@ ILoggingSystem* CreateApsaraLoggingSystem();
 #endif
 
 #define LOG_X_DUMMY_BEGIN                                                   \
-    do {                                                                      \
-        LogMaker* __currentInternalLogMakerVar__ = NULL;     \
+    do {                                                                    \
+        LogMaker* __currentInternalLogMakerVar__ = NULL;                    \
         StringPieceFormatter* __currentInternalLogFormatter__ = NULL;
 
 #define LOG_X_DUMMY_END                                                     \
@@ -372,7 +372,7 @@ ILoggingSystem* CreateApsaraLoggingSystem();
 #define TRANSLATE_LINE_TO_STR(count) TRANSLATE_LINEINT_TO_STR(count)
 #endif
 
-#define LOG_QPS_X(logger, throttle, LOG_METHOD, fields)                           \
+#define LOG_QPS_X(logger, throttle, LOG_METHOD, fields)                             \
     do                                                                              \
     {                                                                               \
         uint64_t waitTime;                                                          \
@@ -382,12 +382,12 @@ ILoggingSystem* CreateApsaraLoggingSystem();
         }                                                                           \
     } while (false)
 
-#define LOG_QPS(logger, qps, LOG_METHOD, fields)                                  \
+#define LOG_QPS(logger, qps, LOG_METHOD, fields)                                    \
     do                                                                              \
     {                                                                               \
-        static GeneralThrottle sLoggingThrottle(qps, 1000000,      \
+        static GeneralThrottle sLoggingThrottle(qps, 1000000,                       \
                 __FILE__ ":" TRANSLATE_LINE_TO_STR(__LINE__));                      \
-        LOG_QPS_X(logger, sLoggingThrottle, LOG_METHOD, fields);                  \
+        LOG_QPS_X(logger, sLoggingThrottle, LOG_METHOD, fields);                    \
     } while (false)
 
 #define LOG_INFO_QPS50(logger,   fields)    LOG_QPS(logger, 50,   LOG_INFO, fields)
@@ -488,161 +488,161 @@ struct LoggingFieldTypeDecoder
     macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_4(macro, ...)                                       \
-    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)         \
+    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)       \
     macro(4, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_5(macro, ...)                                       \
-    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)         \
+    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)       \
     macro(4, __VA_ARGS__) macro(5, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_6(macro, ...)                                       \
-    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)         \
+    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)       \
     macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_7(macro, ...)                                       \
-    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)         \
-    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)         \
+    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)       \
+    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)       \
     macro(7, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_8(macro, ...)                                       \
-    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)         \
-    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)         \
+    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)       \
+    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)       \
     macro(7, __VA_ARGS__) macro(8, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_9(macro, ...)                                       \
-    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)         \
-    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)         \
+    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)       \
+    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)       \
     macro(7, __VA_ARGS__) macro(8, __VA_ARGS__) macro(9, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_10(macro, ...)                                      \
-    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)         \
-    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)         \
-    macro(7, __VA_ARGS__) macro(8, __VA_ARGS__) macro(9, __VA_ARGS__)         \
+    macro(1, __VA_ARGS__) macro(2, __VA_ARGS__) macro(3, __VA_ARGS__)       \
+    macro(4, __VA_ARGS__) macro(5, __VA_ARGS__) macro(6, __VA_ARGS__)       \
+    macro(7, __VA_ARGS__) macro(8, __VA_ARGS__) macro(9, __VA_ARGS__)       \
     macro(10, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_11(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
     macro(10, __VA_ARGS__) macro(11, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_12(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
 
 #define LOG_REPEAT_CODE_13(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
     macro(13, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_14(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
     macro(13, __VA_ARGS__) macro(14, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_15(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
     macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_16(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
     macro(16, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_17(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
     macro(16, __VA_ARGS__) macro(17, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_18(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
     macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_19(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
-    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
+    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)    \
     macro(19, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_20(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
-    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
+    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)    \
     macro(19, __VA_ARGS__) macro(20, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_21(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
-    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
+    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)    \
     macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_22(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
-    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)      \
-    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
+    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)    \
+    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)    \
     macro(22, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_23(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
-    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)      \
-    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
+    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)    \
+    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)    \
     macro(22, __VA_ARGS__) macro(23, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_24(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
-    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)      \
-    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
+    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)    \
+    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)    \
     macro(22, __VA_ARGS__) macro(23, __VA_ARGS__) macro(24, __VA_ARGS__)
 
 #define LOG_REPEAT_CODE_25(macro, ...)                                      \
-    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)       \
-    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)       \
-    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)       \
-    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)      \
-    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)      \
-    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)      \
-    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)      \
-    macro(22, __VA_ARGS__) macro(23, __VA_ARGS__) macro(24, __VA_ARGS__)      \
+    macro(1, __VA_ARGS__)  macro(2, __VA_ARGS__)  macro(3, __VA_ARGS__)     \
+    macro(4, __VA_ARGS__)  macro(5, __VA_ARGS__)  macro(6, __VA_ARGS__)     \
+    macro(7, __VA_ARGS__)  macro(8, __VA_ARGS__)  macro(9, __VA_ARGS__)     \
+    macro(10, __VA_ARGS__) macro(11, __VA_ARGS__) macro(12, __VA_ARGS__)    \
+    macro(13, __VA_ARGS__) macro(14, __VA_ARGS__) macro(15, __VA_ARGS__)    \
+    macro(16, __VA_ARGS__) macro(17, __VA_ARGS__) macro(18, __VA_ARGS__)    \
+    macro(19, __VA_ARGS__) macro(20, __VA_ARGS__) macro(21, __VA_ARGS__)    \
+    macro(22, __VA_ARGS__) macro(23, __VA_ARGS__) macro(24, __VA_ARGS__)    \
     macro(25, __VA_ARGS__)
 
 #define LOG_CAT(a, ...)        a ## __VA_ARGS__
@@ -677,31 +677,31 @@ struct LoggingFieldTypeDecoder
 
 #define LOG_APPEND_PARAM_CTOR_LIST(index, ...)                              \
     LOG_ADD_COMMA(index)                                                    \
-        LoggingFieldTypeEncoder<P ## index>::Encode(p ## index),              \
+        LoggingFieldTypeEncoder<P ## index>::Encode(p ## index),            \
             LoggingFieldTypeEncoder<V ## index>::Encode(v ## index)
 
 #define LOG_APPEND_PARAM_VARTYPE_DECLARE(index, ...)                        \
     LOG_ADD_COMMA(index)                                                    \
-        typename LoggingFieldTypeEncoder<P ## index>::FieldType,              \
+        typename LoggingFieldTypeEncoder<P ## index>::FieldType,            \
             typename LoggingFieldTypeEncoder<V ## index>::FieldType
 
 #define LOG_APPEND_PARAM_DUMP(index, ...)                                   \
-    formatter(LoggingFieldTypeDecoder<P ## index>::Decode(param.p ## index),  \
+    formatter(LoggingFieldTypeDecoder<P ## index>::Decode(param.p ## index),\
         LoggingFieldTypeDecoder<V ## index>::Decode(param.v ## index));
 
 #define LOG_DEFINE_APPEND_PARAM(i)                                          \
-    template<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                      \
+    template<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                          \
             (LOG_TYPENAME_DECLARE))>                                        \
-    struct LoggingAppendParam##i                                              \
-    {                                                                         \
-        LoggingAppendParam##i(LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)     \
+    struct LoggingAppendParam##i                                            \
+    {                                                                       \
+        LoggingAppendParam##i(LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)         \
             (LOG_CTOR_TYPEVAR_DECLARE)))                                    \
-        __attribute__((always_inline))                                        \
-        {                                                                     \
-            LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                       \
+        __attribute__((always_inline))                                      \
+        {                                                                   \
+            LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                           \
                 (LOG_APPEND_PARAM_INIT));                                   \
-        }                                                                     \
-        LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                           \
+        }                                                                   \
+        LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                               \
                 (LOG_APPEND_PARAM_DECLARE));                                \
     };
 
@@ -744,57 +744,57 @@ LOG_DEFINE_APPEND_PARAM(23);
 #define LOG_NUMBER_SUB_2_25  23
 
 #define LOG_CREATE_APPEND_LOG_TMPL_PARAM_X(i)                               \
-        LoggingAppendParam##i<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)     \
+        LoggingAppendParam##i<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)         \
             (LOG_APPEND_PARAM_VARTYPE_DECLARE))>                            \
-                param(LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)             \
+                param(LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                 \
                     (LOG_APPEND_PARAM_CTOR_LIST)));
 #define LOG_CREATE_APPEND_LOG_TMPL_PARAM(...)                               \
     LOG_CREATE_APPEND_LOG_TMPL_PARAM_X(__VA_ARGS__)
 
 #define LOG_CREATE_APPEND_LOG_API(i, ix)                                    \
-    template<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                      \
+    template<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                          \
             (LOG_TYPENAME_DECLARE))>                                        \
-        __attribute__((always_inline))                                        \
-    void AppendLog(LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                \
+        __attribute__((always_inline))                                      \
+    void AppendLog(LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                    \
             (LOG_PARAM_TYPEVAR_DECLARE)))                                   \
-    {                                                                         \
-        LOG_CREATE_APPEND_LOG_TMPL_PARAM(LOG_NUMBER_SUB_2(i));            \
-        appendLog(param, LoggingFieldTypeEncoder<P ## ix>::Encode(p ## ix),   \
-                LoggingFieldTypeEncoder<V ## ix>::Encode(v ## ix),            \
-                LoggingFieldTypeEncoder<P ## i>::Encode(p ## i),              \
-                LoggingFieldTypeEncoder<V ## i>::Encode(v ## i));             \
+    {                                                                       \
+        LOG_CREATE_APPEND_LOG_TMPL_PARAM(LOG_NUMBER_SUB_2(i));              \
+        appendLog(param, LoggingFieldTypeEncoder<P ## ix>::Encode(p ## ix), \
+                LoggingFieldTypeEncoder<V ## ix>::Encode(v ## ix),          \
+                LoggingFieldTypeEncoder<P ## i>::Encode(p ## i),            \
+                LoggingFieldTypeEncoder<V ## i>::Encode(v ## i));           \
     }
 
 #define LOG_CREATE_APPEND_LOG_IMPL_DUMP_PARAM(i)                            \
     LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)(LOG_APPEND_PARAM_DUMP))
 
 #define LOG_CREATE_APPEND_LOG_TMPL_PARAM_TYPE_X(i)                          \
-    const LoggingAppendParam##i<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)   \
+    const LoggingAppendParam##i<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)       \
         (LOG_VARTYPE_DECLARE))>& param
 
 #define LOG_CREATE_APPEND_LOG_TMPL_PARAM_TYPE(...)                          \
     LOG_CREATE_APPEND_LOG_TMPL_PARAM_TYPE_X(__VA_ARGS__)
 
 #define LOG_CREATE_APPEND_LOG_IMPL(i, ix)                                   \
-    template<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                      \
+    template<LOG_EVAL(LOG_CAT(LOG_REPEAT_CODE_, i)                          \
             (LOG_TYPENAME_DECLARE))>                                        \
-        __attribute__((noinline))                                             \
-    void appendLog(                                                           \
-            LOG_CREATE_APPEND_LOG_TMPL_PARAM_TYPE(LOG_NUMBER_SUB_2(i)),   \
-                const P ## ix p ## ix, const V ## ix v ## ix,                 \
-                const P ## i p ## i, const V ## i v ## i)                     \
-    {                                                                         \
-        StringPieceFormatter formatter(1024, ":\t");                          \
-        TLSLogHelper* helper = MakeLogHeader(formatter);                      \
-        if (LIKELY(helper))                                             \
-        {                                                                     \
-            LOG_CREATE_APPEND_LOG_IMPL_DUMP_PARAM(LOG_NUMBER_SUB_2(i));   \
-            formatter(LoggingFieldTypeDecoder<P ## ix>::Decode(p ## ix),      \
-                    LoggingFieldTypeDecoder<V ## ix>::Decode(v ## ix))        \
-                (LoggingFieldTypeDecoder<P ## i>::Decode(p ## i),             \
-                 LoggingFieldTypeDecoder<V ## i>::Decode(v ## i));            \
-            WriteLogToSink(formatter, helper);                                \
-        }                                                                     \
+        __attribute__((noinline))                                           \
+    void appendLog(                                                         \
+            LOG_CREATE_APPEND_LOG_TMPL_PARAM_TYPE(LOG_NUMBER_SUB_2(i)),     \
+                const P ## ix p ## ix, const V ## ix v ## ix,               \
+                const P ## i p ## i, const V ## i v ## i)                   \
+    {                                                                       \
+        StringPieceFormatter formatter(1024, ":\t");                        \
+        TLSLogHelper* helper = MakeLogHeader(formatter);                    \
+        if (LIKELY(helper))                                                 \
+        {                                                                   \
+            LOG_CREATE_APPEND_LOG_IMPL_DUMP_PARAM(LOG_NUMBER_SUB_2(i));     \
+            formatter(LoggingFieldTypeDecoder<P ## ix>::Decode(p ## ix),    \
+                    LoggingFieldTypeDecoder<V ## ix>::Decode(v ## ix))      \
+                (LoggingFieldTypeDecoder<P ## i>::Decode(p ## i),           \
+                 LoggingFieldTypeDecoder<V ## i>::Decode(v ## i));          \
+            WriteLogToSink(formatter, helper);                              \
+        }                                                                   \
     }
 
 enum { MAX_SUPPORT_LOGGING_SYSTEM = 7 };
@@ -1023,9 +1023,9 @@ struct StaticLogMakerCreator
 #define LOG_OPERATION_DUMP_DONE(...)
 #define LOG_OPERATION_NEXT_DONE
 
-#define LOG_UNPACK_FIELD(cond, a, b, ...)                                 \
-    LOG_GET_THIS_OPERATION(~, ##__VA_ARGS__, LOG_OPERATION_DUMP,        \
-            LOG_OPERATION_DUMP_DONE)(cond, a, b)                          \
+#define LOG_UNPACK_FIELD(cond, a, b, ...)                                   \
+    LOG_GET_THIS_OPERATION(~, ##__VA_ARGS__, LOG_OPERATION_DUMP,            \
+            LOG_OPERATION_DUMP_DONE)(cond, a, b)                            \
     LOG_GET_NEXT_OPERATION(~, ##__VA_ARGS__, LOG_OPERATION_NEXT_DONE)
 
 #define LOG_UNPACK_1(...) LOG_UNPACK_FIELD(0, __VA_ARGS__, LOG_UNPACK_2)
@@ -1058,114 +1058,114 @@ struct StaticLogMakerCreator
 #define LOG_UNPACK_s(...) LOG_UNPACK_FIELD(1, __VA_ARGS__, LOG_UNPACK_t)
 
 #define LOG_CREATE_STATIC_LOGMAKER(globalmaker, localmaker,                 \
-            logger, level, file, line, func)                                  \
-    localmaker = StaticLogMakerCreator::Create(&globalmaker, \
+            logger, level, file, line, func)                                \
+    localmaker = StaticLogMakerCreator::Create(&globalmaker,                \
             logger, level, file, line, func);
 
 #define LOG_CREATE_LOGFORMATER(maker, formatter, helper)                    \
-    struct StaticLogFormaterCreator                                           \
-    {                                                                         \
-        static StringPieceFormatter* Create(                 \
-                LogMaker* __maker__,                         \
-                TLSLogHelper** __helper__)                   \
-            __attribute__((noinline))                                         \
-        {                                                                     \
-            StringPieceFormatter* __formatter__ =            \
-                    new StringPieceFormatter(1024, ":\t");                    \
-            *__helper__ = __maker__->MakeLogHeader(*__formatter__);           \
-            if (UNLIKELY(!*__helper__))                                 \
-            {                                                                 \
-                delete __formatter__;                                         \
-                return NULL;                                                  \
-            }                                                                 \
-            return __formatter__;                                             \
-        }                                                                     \
-    };                                                                        \
+    struct StaticLogFormaterCreator                                         \
+    {                                                                       \
+        static StringPieceFormatter* Create(                                \
+                LogMaker* __maker__,                                        \
+                TLSLogHelper** __helper__)                                  \
+            __attribute__((noinline))                                       \
+        {                                                                   \
+            StringPieceFormatter* __formatter__ =                           \
+                    new StringPieceFormatter(1024, ":\t");                  \
+            *__helper__ = __maker__->MakeLogHeader(*__formatter__);         \
+            if (UNLIKELY(!*__helper__))                                     \
+            {                                                               \
+                delete __formatter__;                                       \
+                return NULL;                                                \
+            }                                                               \
+            return __formatter__;                                           \
+        }                                                                   \
+    };                                                                      \
     formatter = StaticLogFormaterCreator::Create(maker, &helper);
 
-#define LOG_RECORD(logger, level, fields)                                     \
-    do {                                                                      \
-        static LogMaker*                                     \
-            __currentInternalLogMaker__ = NULL;                               \
-        LogMaker* __currentInternalLogMakerVar__ =           \
-            __currentInternalLogMaker__;                                      \
-        if (UNLIKELY(__currentInternalLogMakerVar__ == NULL))           \
-        {                                                                     \
+#define LOG_RECORD(logger, level, fields)                                   \
+    do {                                                                    \
+        static LogMaker*                                                    \
+            __currentInternalLogMaker__ = NULL;                             \
+        LogMaker* __currentInternalLogMakerVar__ =                          \
+            __currentInternalLogMaker__;                                    \
+        if (UNLIKELY(__currentInternalLogMakerVar__ == NULL))               \
+        {                                                                   \
             LOG_CREATE_STATIC_LOGMAKER(__currentInternalLogMaker__,         \
-                    __currentInternalLogMakerVar__, logger, level,            \
-                        __FILE__, __LINE__, __FUNCTION__);                    \
-        }                                                                     \
-        __currentInternalLogMakerVar__->AppendLog(                            \
-                LOG_UNPACK_DEFER(LOG_UNPACK_1 fields ()));                \
+                    __currentInternalLogMakerVar__, logger, level,          \
+                        __FILE__, __LINE__, __FUNCTION__);                  \
+        }                                                                   \
+        __currentInternalLogMakerVar__->AppendLog(                          \
+                LOG_UNPACK_DEFER(LOG_UNPACK_1 fields ()));                   
     } while (false)
 
 #define LOG_X_IF(logger, condition, fields, level, likeliness)              \
-    do {                                                                      \
-        if (condition && likeliness((logger)->GetLevel()<= level))            \
-        {                                                                     \
+    do {                                                                    \
+        if (condition && likeliness((logger)->GetLevel()<= level))          \
+        {                                                                   \
             LOG_RECORD(logger, level, fields);                              \
-        }                                                                     \
+        }                                                                   \
     } while (false)
 
 #define LOG_CALL(logger, level, likeliness, fields...)                      \
-    static LogMaker*                                         \
-        __currentInternalLogMaker__  = NULL;                                  \
-    LogMaker* __currentInternalLogMakerVar__ =               \
-        __currentInternalLogMaker__;                                          \
-    if (UNLIKELY(__currentInternalLogMakerVar__ == NULL))               \
-    {                                                                         \
+    static LogMaker*                                                        \
+        __currentInternalLogMaker__  = NULL;                                \
+    LogMaker* __currentInternalLogMakerVar__ =                              \
+        __currentInternalLogMaker__;                                        \
+    if (UNLIKELY(__currentInternalLogMakerVar__ == NULL))                   \
+    {                                                                       \
         LOG_CREATE_STATIC_LOGMAKER(__currentInternalLogMaker__,             \
-                __currentInternalLogMakerVar__, logger, level,                \
-                    __FILE__, __LINE__, __FUNCTION__);                        \
-    }                                                                         \
-    LogCallTracer logCallTracer(logger, level,               \
-            __currentInternalLogMakerVar__);                                  \
-    if (UNLIKELY(logCallTracer.EnableLogging()))                        \
-    {                                                                         \
-        __currentInternalLogMakerVar__->AppendLog(                            \
+                __currentInternalLogMakerVar__, logger, level,              \
+                    __FILE__, __LINE__, __FUNCTION__);                      \
+    }                                                                       \
+    LogCallTracer logCallTracer(logger, level,                              \
+            __currentInternalLogMakerVar__);                                \
+    if (UNLIKELY(logCallTracer.EnableLogging()))                            \
+    {                                                                       \
+        __currentInternalLogMakerVar__->AppendLog(                          \
                 LOG_UNPACK_DEFER(                                           \
                     LOG_UNPACK_1 ("Enter", __FUNCTION__) fields ()));       \
     }
 
 #define LOG_X_BEGIN(logger, level, likeliness, fields...)                   \
-    do {                                                                      \
-        static LogMaker*                                     \
-            __currentInternalLogMaker__ = NULL;                               \
-        LogMaker* __currentInternalLogMakerVar__ =           \
-            __currentInternalLogMaker__;                                      \
-        TLSLogHelper* __currentInternalLogHelper__ = NULL;   \
-        if (UNLIKELY(__currentInternalLogMakerVar__ == NULL))           \
-        {                                                                     \
+    do {                                                                    \
+        static LogMaker*                                                    \
+            __currentInternalLogMaker__ = NULL;                             \
+        LogMaker* __currentInternalLogMakerVar__ =                          \
+            __currentInternalLogMaker__;                                    \
+        TLSLogHelper* __currentInternalLogHelper__ = NULL;                  \
+        if (UNLIKELY(__currentInternalLogMakerVar__ == NULL))               \
+        {                                                                   \
             LOG_CREATE_STATIC_LOGMAKER(__currentInternalLogMaker__,         \
-                    __currentInternalLogMakerVar__, logger, level,            \
-                        __FILE__, __LINE__, __FUNCTION__);                    \
-        }                                                                     \
-        StringPieceFormatter* __currentInternalLogFormatter__ = NULL;         \
-        if (likeliness((logger)->GetLevel()<= level))                         \
-        {                                                                     \
+                    __currentInternalLogMakerVar__, logger, level,          \
+                        __FILE__, __LINE__, __FUNCTION__);                  \
+        }                                                                   \
+        StringPieceFormatter* __currentInternalLogFormatter__ = NULL;       \
+        if (likeliness((logger)->GetLevel()<= level))                       \
+        {                                                                   \
             LOG_CREATE_LOGFORMATER(__currentInternalLogMakerVar__,          \
-                    __currentInternalLogFormatter__,                          \
-                        __currentInternalLogHelper__);                        \
-            (*__currentInternalLogFormatter__)fields();                       \
+                    __currentInternalLogFormatter__,                        \
+                        __currentInternalLogHelper__);                      \
+            (*__currentInternalLogFormatter__)fields();                     \
         }
 
 #define LOG_FIELD(key, value)                                               \
-    do {                                                                      \
-        if (__currentInternalLogFormatter__)                                  \
-        {                                                                     \
-            __currentInternalLogMakerVar__->AppendField(                      \
-                *__currentInternalLogFormatter__ , key, value);               \
-        }                                                                     \
+    do {                                                                    \
+        if (__currentInternalLogFormatter__)                                \
+        {                                                                   \
+            __currentInternalLogMakerVar__->AppendField(                    \
+                *__currentInternalLogFormatter__ , key, value);             \
+        }                                                                   \
     } while (false)
 
 #define LOG_X_END                                                           \
-        if (__currentInternalLogFormatter__ != NULL)                          \
-        {                                                                     \
-            __currentInternalLogMakerVar__->WriteLogToSink(                   \
-                *__currentInternalLogFormatter__,                             \
-                    __currentInternalLogHelper__);                            \
-            delete __currentInternalLogFormatter__;                           \
-        }                                                                     \
+        if (__currentInternalLogFormatter__ != NULL)                        \
+        {                                                                   \
+            __currentInternalLogMakerVar__->WriteLogToSink(                 \
+                *__currentInternalLogFormatter__,                           \
+                    __currentInternalLogHelper__);                          \
+            delete __currentInternalLogFormatter__;                         \
+        }                                                                   \
     } while (false)
 
 #endif  // _SRC_COMMON_LOGGING_H

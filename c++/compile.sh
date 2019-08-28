@@ -8,19 +8,21 @@ srcFiles="src/base/gettime.cpp                          \
           src/base/bit_map.cpp                          \
           src/common/errorcode.cpp                      \
           src/memory/memcache.cpp                       \
+          src/memory/mempool.cpp                        \
           src/string/string_util.cpp                    \
           src/string/dmg_fp/dtoa.cpp                    \
           src/string/dmg_fp/g_fmt.cpp"
-testFiles="src/base/test/intrusive_list_test.cpp        \
+testFiles="src/base/test/bit_map_test.cpp               \
+           src/base/test/crc32c_test.cpp                \
+           src/base/test/exponential_backoff_test.cpp   \
+           src/base/test/intrusive_list_test.cpp        \
            src/base/test/intrusive_heap_test.cpp        \
            src/base/test/intrusive_rbtree_test.cpp      \
            src/base/test/intrusive_map_test.cpp         \
            src/base/test/intrusive_hash_map_test.cpp    \
            src/base/test/skiplist_test.cpp              \
-           src/base/test/crc32c_test.cpp                \
-           src/base/test/bit_map_test.cpp               \
            src/common/test/errorcode_test.cpp           \
-           src/memory/test/arena_test.cpp               \
+           src/memory/test/mempool_test.cpp             \
            src/memory/test/memcache_test.cpp            \
            src/memory/test/objcache_test.cpp            \
            src/string/test/string_util_test.cpp         \

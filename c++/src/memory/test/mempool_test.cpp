@@ -5,13 +5,13 @@
 #include <vector>
 
 #include "src/common/macros.h"
-#include "src/memory/arena.h"
+#include "src/memory/mempool.h"
 #include "src/common/assert.h"
 
 static void testAlloc(
         size_t count, int size, bool aligned)
 {
-    Arena pool;
+    MemPool pool;
     std::vector<void*> results;
     for (size_t i = 0; i < count; ++i)
     {
@@ -40,7 +40,7 @@ static void testMemoryUsage(
     size_t usageInPage = 0;
     size_t actualSize = aligned
         ? (size + kAlign - 1) / kAlign * kAlign : size;
-    Arena pool(bufferSize);
+    MemPool pool(bufferSize);
     for (size_t i = 0; i < count; ++i)
     {
         aligned ? pool.AllocAligned(size) : pool.Alloc(size);
@@ -54,11 +54,11 @@ static void testMemoryUsage(
     }
     totalUsage = (totalUsage + bufferSize - 1)
         / bufferSize * bufferSize;
-    totalUsage += sizeof(Arena);
+    totalUsage += sizeof(MemPool);
     ASSERT_EQ(pool.GetMemoryUsage(), totalUsage);
 }
 
-TEST(ArenaTest, Alloc)
+TEST(MemPoolTest, Alloc)
 {
     size_t eleCount[] = { 10, 100, 1000, 10000, 100000, 1000000 };
     size_t eleSize[] = { 5, 10, 20, 43, 120, 255, 1024 };
@@ -72,9 +72,9 @@ TEST(ArenaTest, Alloc)
     }
 }
 
-TEST(ArenaTest, AllocLarge)
+TEST(MemPoolTest, AllocLarge)
 {
-    Arena pool(4096);
+    MemPool pool(4096);
     EXPECT_TRUE(pool.Alloc(0) != NULL);
     EXPECT_TRUE(pool.Alloc(4095) != NULL);
     EXPECT_TRUE(pool.Alloc(4096) !=  NULL);
@@ -82,7 +82,7 @@ TEST(ArenaTest, AllocLarge)
     EXPECT_TRUE(pool.Alloc(10240) == NULL);
 }
 
-TEST(ArenaTest, MemorySizeTest)
+TEST(MemPoolTest, MemorySizeTest)
 {
     size_t bufferSize[] = { 128, 256, 512, 1024, 4096, 10240};
     size_t eleCount[] = { 10, 100, 1000, 10000 };

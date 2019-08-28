@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "src/base/skiplist.h"
-#include "src/memory/arena.h"
 
 struct Record
 {
@@ -23,8 +22,8 @@ typedef SkipList<Record, RecordCompare>::Iterator MyIterator;
 
 TEST(SkipListTest, Insert)
 {
-    Arena arena;
-    MySkipList* list = new MySkipList(&arena);
+    MemPool pool;
+    MySkipList* list = new MySkipList(&pool);
 
     size_t rounds = 100000;
     for (size_t i = 0; i < rounds; ++i)
@@ -36,8 +35,8 @@ TEST(SkipListTest, Insert)
 
 TEST(SkipListTest, Contain)
 {
-    Arena arena;
-    MySkipList list(&arena);
+    MemPool pool;
+    MySkipList list(&pool);
     Randomizer rander(unsigned(time(NULL)));
 
     size_t rounds = 100000;
@@ -53,8 +52,8 @@ TEST(SkipListTest, Contain)
 
 TEST(SkipListTest, CheckSequence)
 {
-    Arena arena;
-    MySkipList list(&arena);
+    MemPool pool;
+    MySkipList list(&pool);
     Randomizer rander(unsigned(time(NULL)));
 
     size_t rounds = 100000;

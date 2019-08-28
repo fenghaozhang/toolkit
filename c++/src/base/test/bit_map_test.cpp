@@ -156,17 +156,17 @@ TEST(SparseBitMap, Reset)
 TEST(SparseBitMap, Capacity)
 {
     SparseBitMap bitmap(1023);
-    EXPECT_EQ(bitmap.Capacity(), 1023);
+    EXPECT_GE(bitmap.Capacity(), 1023);
     bitmap.Set(102355);
-    EXPECT_EQ(bitmap.Capacity(), 102356);
+    EXPECT_GE(bitmap.Capacity(), 102356);
     bitmap.Clear(102355);
-    EXPECT_EQ(bitmap.Capacity(), 102356);
+    EXPECT_GE(bitmap.Capacity(), 102356);
 }
 
-TEST(SparseBitMap, Arena)
+TEST(SparseBitMap, Pool)
 {
-    Arena arena;
-    SparseBitMap bitmap(0, &arena);
+    MemPool pool;
+    SparseBitMap bitmap(0, &pool);
     int size = 10000;
     for (int i = size; i > 0; i -= 2)
     {
@@ -210,8 +210,8 @@ TEST(SparseBitMap, RandTest)
     }
     bitmap.Reset();
 
-    Arena arena;
-    SparseBitMap bitmap2(0, &arena);
+    MemPool pool;
+    SparseBitMap bitmap2(0, &pool);
     for (size_t i = 0; i < round; ++i)
     {
         bitmap2.Set(rander.Rand(round));

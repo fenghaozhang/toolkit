@@ -3,18 +3,18 @@
 
 #include <algorithm>
 
-BitMap::BitMap(size_t capacity, Arena* arena)
+BitMap::BitMap(size_t capacity, MemPool* pool)
     : mCapacity(capacity),
       mSliceBits(sizeof(SliceType) * 8),
-      mSliceCount((mCapacity + mSliceBits - 1) / mSliceBits),
-      mArena(arena)
+      mSliceCount((capacity + mSliceBits - 1) / mSliceBits),
+      mPool(pool)
 {
     initBitMap();
 }
 
 BitMap::~BitMap()
 {
-    if (mArena == NULL)
+    if (mPool == NULL)
     {
         delete[] mSlices;
     }
@@ -32,24 +32,25 @@ size_t BitMap::Count() const
 
 inline void BitMap::initBitMap()
 {
-    if (mArena != NULL)
+    if (mPool != NULL)
     {
-        void* mem = mArena->Alloc(mSliceCount * sizeof(SliceType));
+        void* mem = mPool->Alloc(mSliceCount * sizeof(SliceType));
         mSlices = new (mem) SliceType[mSliceCount];
     }
     else
     {
         mSlices = new SliceType[mSliceCount];
     }
-    memset(mSlices, 0, mSliceCount * sizeof(SliceType));
+    Reset();
 }
 
-SparseBitMap::SparseBitMap(size_t capacity, Arena* arena)
-    : mCapacity(MIN(capacity, sMaxCapacity)),
-      mBitsPerMap(getBitsPerMap(mCapacity)),
-      mArena(arena)
+SparseBitMap::SparseBitMap(size_t capacity, MemPool* pool)
+    : mPool(pool)
 {
-    uint32_t count = (mCapacity + mBitsPerMap - 1) / mBitsPerMap;
+    capacity = MIN(capacity, sMaxCapacity);
+    mBitsPerMap = getBitsPerMap(capacity);
+    uint32_t count = (capacity + mBitsPerMap - 1) / mBitsPerMap;
+    mCapacity = count * mBitsPerMap;
     mMaps.resize(count, NULL);
     for (uint32_t i = 0; i < count; i++)
     {
@@ -59,7 +60,7 @@ SparseBitMap::SparseBitMap(size_t capacity, Arena* arena)
 
 SparseBitMap::~SparseBitMap()
 {
-    if (mArena == NULL)
+    if (mPool == NULL)
     {
         for (size_t i = 0; i < mMaps.size(); i++)
         {
@@ -90,11 +91,7 @@ bool SparseBitMap::Get(size_t index) const
     ASSERT(index < sMaxCapacity);
     size_t mapIndex = index / mBitsPerMap;
     size_t offset = index % mBitsPerMap;
-<<<<<<< HEAD
     if (UNLIKELY(index >= mCapacity || mMaps[mapIndex] == NULL))
-=======
-    if (LIKELY(index < mCapacity && mMaps[mapIndex] != NULL))
->>>>>>> Add SparseBitMap
     {
         return false;
     }
@@ -136,11 +133,7 @@ inline void SparseBitMap::allocMapIfNeeded(size_t index)
     {
         mMaps.resize(mapIndex + 1, NULL);
         mMaps[mapIndex] = allocBitMap();
-<<<<<<< HEAD
-        mCapacity = index + 1;
-=======
         mCapacity = (mapIndex + 1) * mBitsPerMap;
->>>>>>> Add SparseBitMap
     }
     else if (UNLIKELY(mMaps[mapIndex] == NULL))
     {
@@ -150,17 +143,14 @@ inline void SparseBitMap::allocMapIfNeeded(size_t index)
 
 inline BitMap* SparseBitMap::allocBitMap()
 {
-    BitMap* map = NULL;
-    if (mArena != NULL)
+    if (mPool != NULL)
     {
-        void* mem = mArena->Alloc(sizeof(BitMap));
-        map = new (mem) BitMap(mBitsPerMap, mArena);
+        return mPool->New<BitMap>(mBitsPerMap, mPool);
     }
     else
     {
-        map = new BitMap(mBitsPerMap, NULL);
+        return new BitMap(mBitsPerMap, NULL);
     }
-    return map;
 }
 
 size_t SparseBitMap::getBitsPerMap(size_t capacity)

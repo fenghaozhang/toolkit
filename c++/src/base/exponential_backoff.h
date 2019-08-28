@@ -4,16 +4,8 @@
 #include <stdint.h>
 #include <algorithm>
 
-#include "common2/macros.h"
+#include "src/common/macros.h"
 
-<<<<<<< HEAD
-namespace apsara
-{
-namespace pangu
-{
-
-=======
->>>>>>> Add SparseBitMap
 class ExponentialBackoff
 {
 public:
@@ -28,11 +20,7 @@ private:
     uint64_t mLimit;
     uint64_t mScaleFactor;
 
-<<<<<<< HEAD
-    PANGU_DISALLOW_COPY_AND_ASSIGN(ExponentialBackoff);
-=======
     DISALLOW_COPY_AND_ASSIGN(ExponentialBackoff);
->>>>>>> Add SparseBitMap
 };
 
 // IMPLEMENTRATIONS
