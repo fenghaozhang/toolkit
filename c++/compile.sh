@@ -2,13 +2,14 @@ MODE=$1
 
 workingDir=`pwd`
 includeDir="$workingDir/thirdparty/include"
-srcFiles="src/base/gettime.cpp                          \
-          src/base/crc32c.cpp                           \
+srcFiles="src/base/bit_map.cpp                          \
           src/base/cpu.cpp                              \
-          src/base/bit_map.cpp                          \
-          src/common/errorcode.cpp                      \
+          src/base/crc32c.cpp                           \
+          src/base/gettime.cpp                          \
+          src/base/status.cpp                           \
           src/memory/memcache.cpp                       \
           src/memory/mempool.cpp                        \
+          src/common/errorcode.cpp                      \
           src/string/string_util.cpp                    \
           src/string/dmg_fp/dtoa.cpp                    \
           src/string/dmg_fp/g_fmt.cpp"
@@ -21,6 +22,7 @@ testFiles="src/base/test/bit_map_test.cpp               \
            src/base/test/intrusive_map_test.cpp         \
            src/base/test/intrusive_hash_map_test.cpp    \
            src/base/test/skiplist_test.cpp              \
+           src/base/test/status_test.cpp                \
            src/common/test/errorcode_test.cpp           \
            src/memory/test/mempool_test.cpp             \
            src/memory/test/memcache_test.cpp            \

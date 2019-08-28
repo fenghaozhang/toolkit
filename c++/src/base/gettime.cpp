@@ -1,61 +1,125 @@
 #include "src/base/gettime.h"
 
-#include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 
 #include "src/base/cpu.h"
 #include "src/common/macros.h"
+#include "src/sync/lock.h"
 
-static bool gUseTsc = false;
+#define USECS_PER_SEC       1000000ULL
+#define UPDATE_TSC_INTERVAL 20000000000LL
+#define INIT_TSC_INTERVAL   2000000000LL
+
+static const char* gClockSource =
+    "/sys/devices/system/clocksource/clocksource0/current_clocksource";
+static double gUsPerCycle = 0.0;
+static SpinLock gLock;
 
 static bool IsReliableTsc()
 {
-    static const char* gClockSource =
-        "/sys/devices/system/clocksource/clocksource0/current_clocksource";
-    FILE* fp = fopen(gClockSource, "r");
-    if (fp == NULL)
+    bool ret = false;
+    FILE* file = fopen(gClockSource, "r");
+    if (file != NULL)
     {
-        return false;
+        char line[4];
+        if (fgets(line, sizeof(line), file) != NULL
+                && strcmp(line, "tsc") == 0)
+        {
+            ret = true;
+        }
+        fclose(file);
     }
-
-    char buf[4];
-    if (fgets(buf, sizeof(buf), fp) == NULL || strcmp(buf, "tsc"))
-    {
-        fclose(fp);
-        return false;
-    }
-    fclose(fp);
-    return true;
+    return ret;
 }
 
-static const bool gIsTscReliable = IsReliableTsc();
+static void InitReferenceTime(
+        uint64_t* lastUs,
+        uint64_t* lastCycles,
+        uint64_t us,
+        uint64_t cycles)
+{
+    if (*lastCycles == 0)
+    {
+        *lastCycles = cycles;
+        *lastUs = us;
+    }
+    else
+    {
+        uint64_t diff = cycles - *lastCycles;
+        if (diff > INIT_TSC_INTERVAL && gUsPerCycle == 0.0)
+        {
+            ScopedLocker<SpinLock> Locker(&gLock);
+            if (gUsPerCycle == 0.0)
+            {
+                gUsPerCycle = (us - *lastUs) / static_cast<double>(diff);
+            }
+        }
+    }
+}
 
-static inline uint64_t getTimeOfDay()
+static uint64_t GetTimeOfDay()
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return tv.tv_sec * 1000000ULL + tv.tv_usec;
+    return tv.tv_sec * USECS_PER_SEC + tv.tv_usec;
 }
 
-static inline uint64_t getTimeByCpuCycle()
+static void HandleFallback(uint64_t* us)
 {
-    static volatile double gUsPerCycle = 0.0;
+    static __thread uint64_t tls_ref_last_returned_us;
 
-    if (UNLIKELY(gUsPerCycle == 0.0))
+    if (UNLIKELY(tls_ref_last_returned_us > *us))
     {
-        // TODO(allen.zfh): do something
+        *us = tls_ref_last_returned_us;
     }
-    // TODO(allen.zfh): to replace with cpu cycle calculation
-    return getTimeOfDay();
+    else
+    {
+        tls_ref_last_returned_us = *us;
+    }
 }
+
+static bool gIsReliable = IsReliableTsc();
 
 uint64_t GetCurrentTimeInUs()
 {
-    if (LIKELY(gIsTscReliable && gUseTsc))
-    {
-        return getTimeByCpuCycle();
-    }
-    return getTimeOfDay();
-}
+    static __thread uint64_t tls_ref_last_cycle;
+    static __thread uint64_t tls_ref_last_us;
 
+    // If tsc not relaible, use GTOD instead.
+    if (UNLIKELY(!gIsReliable))
+    {
+        return GetTimeOfDay();
+    }
+
+    if (UNLIKELY(tls_ref_last_us == 0 || gUsPerCycle == 0.0))
+    {
+        uint64_t cycles = GetCpuCycles();
+        uint64_t retus = GetTimeOfDay();
+        InitReferenceTime(&tls_ref_last_us, &tls_ref_last_cycle, retus, cycles);
+        return retus;
+    }
+
+    // On 2.xGHz, UPDATE_TSC_INTERVAL cycles is about 10s.
+    // Since TSCCycle2Ns has ~1/10M deviation,we have at most
+    // 1us offset against GTOD every 10s. It makes sence to
+    // reset tls_ref_last_us and tls_ref_last_cycle every
+    // UPDATE_TSC_INTERVAL cycles.
+    uint64_t diff = GetCpuCycles() - tls_ref_last_cycle;
+    uint64_t retus;
+    if (diff > UPDATE_TSC_INTERVAL)
+    {
+        // slow path
+        tls_ref_last_cycle = GetCpuCycles();
+        retus = GetTimeOfDay();
+        HandleFallback(&retus);
+        tls_ref_last_us = retus;
+    }
+    else
+    {
+        double offset = diff * gUsPerCycle;
+        retus = tls_ref_last_us + static_cast<uint64_t>(offset);
+        HandleFallback(&retus);
+    }
+    return retus;
+}

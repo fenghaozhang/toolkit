@@ -104,7 +104,7 @@ struct ErrorCodeRegisterHelper
     ErrorCodeRegisterHelper()
     {
 #define DEFINE_ERRORCODE(name, value, msg...)           \
-        DEFINE_ERRORCODE_INTERNAL(name, value, ##msg)
+        DEFINE_ERRORCODE_INTERNAL(name, value, #name)
 #define DEFINE_ERRORCODE_INTERNAL(name, value, msg)     \
         RegisterErrorCode(value, #name, msg);
 #include "src/common/errorcode_def.h"
