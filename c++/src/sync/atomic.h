@@ -110,9 +110,10 @@ public:
 
 }  // detail
 
-// Compare the value stored in 'target' and 'compare', if they are equal,
-// then set the 'exchange' into 'target' buffer.
-// If the original value in '*target' equals to 'compare', return true
+/**
+ * Compare the value stored in 'target' and 'compare'.
+ * If equal, set 'exchange' into 'target' buffer and return true
+ */
 template<typename T>
 inline bool AtomicCompareExchange(volatile T* target, T exchange, T compare)
 {
@@ -122,49 +123,63 @@ inline bool AtomicCompareExchange(volatile T* target, T exchange, T compare)
         compare);
 }
 
-// Add 'value' to '*target', and return the original value.
+/**
+ * Add 'value' to '*target', and return the original value.
+ */
 template<typename T>
 inline T AtomicExchangeAdd(volatile T* target, T value)
 {
     return detail::AtomicDetail<sizeof(T)>::ExchangeAdd(target, value);
 }
 
-// Substract 'value' from '*target', and return the original value.
+/**
+ * Substract 'value' from '*target', and return the original value.
+ */
 template<typename T>
 inline T AtomicExchangeSub(volatile T* target, T value)
 {
     return AtomicExchangeAdd(target, static_cast<T>(-value));
 }
 
-// Add 'value' to '*target', and return the new value in 'target'.
+/**
+ * Add 'value' to '*target', and return the new value in 'target'.
+ */
 template<typename T>
 inline T AtomicAdd(volatile T* target, T value)
 {
     return AtomicExchangeAdd(target, value) + value;
 }
 
-// Substract 'value' from 'target', and return the new value in target.
+/**
+ * Substract 'value' from 'target', and return the new value in target.
+ */
 template<typename T>
 inline T AtomicSub(volatile T* target, T value)
 {
     return AtomicExchangeSub(target, value) - value;
 }
 
-// Set 'value' into 'target', and return the old value in target.
+/**
+ * Set 'value' into 'target', and return the old value in target.
+ */
 template<typename T>
 inline T AtomicExchange(volatile T* target, T value)
 {
     return detail::AtomicDetail<sizeof(T)>::Exchange(target, value);
 }
 
-// Set 'value' into '*target'
+/**
+ * Set 'value' into '*target'
+ */
 template<typename T>
 inline void AtomicSet(volatile T* target, T value)
 {
     detail::AtomicDetail<sizeof(T)>::Set(target, value);
 }
 
-// Get the value in '*target'
+/**
+ * Get the value in '*target'
+ */
 template<typename T>
 inline T AtomicGet(volatile T* target)
 {
@@ -172,14 +187,18 @@ inline T AtomicGet(volatile T* target)
     return value;
 }
 
-// Add 1 to '*target', and return the new value in 'target'.
+/**
+ * Add 1 to '*target', and return the new value in 'target'.
+ */
 template<typename T>
 inline T AtomicInc(volatile T* target)
 {
     return AtomicAdd(target, static_cast<T>(1));
 }
 
-// Substract 1 from '*target', and return the new value in 'target'.
+/**
+ * Substract 1 from '*target', and return the new value in 'target'.
+ */
 template<typename T>
 inline T AtomicDec(volatile T* target)
 {

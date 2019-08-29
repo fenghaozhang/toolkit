@@ -1,5 +1,5 @@
-#ifndef _SRC_THREAD_SELFTHREAD_H
-#define _SRC_THREAD_SELFTHREAD_H
+#ifndef _SRC_THREAD_THISTHREAD_H
+#define _SRC_THREAD_THISTHREAD_H
 
 #include <pthread.h>
 #include <unistd.h>
@@ -7,7 +7,7 @@
 
 #include "src/thread/thread_check.h"
 
-class SelfThread {
+class ThisThread {
 public:
     static void SleepInMs(int ms)
     {
@@ -24,10 +24,16 @@ public:
         ::pthread_yield();
     }
 
+    static void Pause()
+    {
+        asm volatile("pause\n": : :"memory");
+    }
+
     static int GetId()
     {
         static __thread pid_t tid = 0;
-        if (tid == 0) {
+        if (tid == 0)
+        {
             tid = ::syscall(SYS_gettid);
         }
         return tid;
@@ -39,7 +45,7 @@ public:
     }
 
 private:
-    SelfThread();
+    ThisThread();
 };
 
-#endif // _SRC_THREAD_SELFTHREAD_H
+#endif // _SRC_THREAD_THISTHREAD_H

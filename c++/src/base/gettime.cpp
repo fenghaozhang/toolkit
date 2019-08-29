@@ -1,11 +1,12 @@
 #include "src/base/gettime.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 
 #include "src/base/cpu.h"
 #include "src/common/macros.h"
-#include "src/sync/lock.h"
+#include "src/sync/micro_lock.h"
 
 #define USECS_PER_SEC       1000000ULL
 #define UPDATE_TSC_INTERVAL 20000000000LL
@@ -14,7 +15,7 @@
 static const char* gClockSource =
     "/sys/devices/system/clocksource/clocksource0/current_clocksource";
 static double gUsPerCycle = 0.0;
-static SpinLock gLock;
+static MicroLock gLock;
 
 static bool IsReliableTsc()
 {
@@ -49,7 +50,7 @@ static void InitReferenceTime(
         uint64_t diff = cycles - *lastCycles;
         if (diff > INIT_TSC_INTERVAL && gUsPerCycle == 0.0)
         {
-            ScopedLocker<SpinLock> Locker(&gLock);
+            ScopedLock<MicroLock> lock(gLock);
             if (gUsPerCycle == 0.0)
             {
                 gUsPerCycle = (us - *lastUs) / static_cast<double>(diff);

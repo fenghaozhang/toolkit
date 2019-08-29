@@ -4,7 +4,7 @@
 
 #include "src/common/assert.h"
 #include "src/sync/atomic.h"
-#include "src/sync/lock.h"
+#include "src/sync/micro_lock.h"
 
 #define MAX_ERROR_CODE      8192
 #define MAX_ERROR_CODE_MOD  4093
@@ -20,7 +20,7 @@ struct ErrorCodeInfo
     uint32_t next;
     std::string *symbol;
     std::string *message;
-    LightSpinLock lock;
+    MicroLock lock;
 } __attribute__((aligned(32)));
 
 static ErrorCodeInfo sErrorCodeIndex[MAX_ERROR_CODE];
@@ -50,7 +50,7 @@ void AddErrorMessage(int errorCode, const std::string& symbol, const std::string
     uint32_t pos = static_cast<uint32_t>(errorCode) % MAX_ERROR_CODE_MOD;
     ErrorCodeInfo* head = &sErrorCodeIndex[pos];
 
-    LightSpinLock::Locker lock(head->lock);
+    ScopedLock<MicroLock> lock(head->lock);
     // Check duplication first
     ErrorCodeInfo* ptr = NULL;
     do {

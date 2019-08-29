@@ -11,6 +11,8 @@ void operator=(const TypeName&);
 #define LIKELY(x)   __builtin_expect(!!(x), 1)
 #define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
+#define FORCE_INLINE inline __attribute__((always_inline))
+
 #define COUNT_OF(x) (sizeof((x)) / sizeof(*(x)))
 
 #define OFFSET_OF(type, member)                                         \

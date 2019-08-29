@@ -13,7 +13,8 @@ srcFiles="src/base/bit_map.cpp                          \
           src/common/errorcode.cpp                      \
           src/string/string_util.cpp                    \
           src/string/dmg_fp/dtoa.cpp                    \
-          src/string/dmg_fp/g_fmt.cpp"
+          src/string/dmg_fp/g_fmt.cpp                   \
+          src/sync/micro_lock.cpp"
 testFiles="src/base/test/bit_map_test.cpp               \
            src/base/test/crc32c_test.cpp                \
            src/base/test/env_test.cpp                   \
@@ -30,6 +31,7 @@ testFiles="src/base/test/bit_map_test.cpp               \
            src/memory/test/memcache_test.cpp            \
            src/memory/test/objcache_test.cpp            \
            src/string/test/string_util_test.cpp         \
+           src/sync/test/micro_lock_test.cpp            \
            test/unittest/main.cpp"
 allFiles="$srcFiles $testFiles"
 
