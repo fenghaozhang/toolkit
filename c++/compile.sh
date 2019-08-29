@@ -5,6 +5,7 @@ includeDir="$workingDir/thirdparty/include"
 srcFiles="src/base/bit_map.cpp                          \
           src/base/cpu.cpp                              \
           src/base/crc32c.cpp                           \
+          src/base/env.cpp                              \
           src/base/gettime.cpp                          \
           src/base/status.cpp                           \
           src/memory/memcache.cpp                       \
@@ -15,6 +16,7 @@ srcFiles="src/base/bit_map.cpp                          \
           src/string/dmg_fp/g_fmt.cpp"
 testFiles="src/base/test/bit_map_test.cpp               \
            src/base/test/crc32c_test.cpp                \
+           src/base/test/env_test.cpp                   \
            src/base/test/exponential_backoff_test.cpp   \
            src/base/test/intrusive_list_test.cpp        \
            src/base/test/intrusive_heap_test.cpp        \
@@ -32,7 +34,7 @@ testFiles="src/base/test/bit_map_test.cpp               \
 allFiles="$srcFiles $testFiles"
 
 libDir="$workingDir/thirdparty/lib"
-libs="$libDir/libgtest.so $libDir/libtcmalloc.a -lpthread"
+libs="$libDir/libgtest.so $libDir/libgmock.so $libDir/libtcmalloc.a -lpthread"
 
 outputDir="build/"
 target="$outputDir/unittest"

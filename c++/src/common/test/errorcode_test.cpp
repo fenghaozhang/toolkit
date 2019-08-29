@@ -5,5 +5,5 @@
 TEST(ErrorCodeTest, Simple)
 {
     EXPECT_EQ(GetErrorString(OK), "OK");
-    EXPECT_EQ(GetErrorString(INTERNAL_ERROR), "Internal error");
+    EXPECT_EQ(GetErrorString(INTERNAL_ERROR), "INTERNAL_ERROR");
 }
