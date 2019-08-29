@@ -4,8 +4,8 @@
 #include <assert.h>
 #include <stdint.h>
 #include <string.h>
-#include "src/common/macros.h"
 #include "src/common/assert.h"
+#include "src/common/macros.h"
 #include "src/sync/lock.h"
 
 /**
@@ -277,8 +277,8 @@ public:
 
     SlotVectorPool()
     {
-        STATIC_ASSERT(VALUE_SIZE >= sizeof(uint32_t));
-        STATIC_ASSERT((uint64_t)MAX_LENGTH < (uint32_t)(-1));
+        STATIC_ASSERT(VALUE_SIZE >= sizeof(uint32_t));  // NOLINT(runtime/sizeof)
+        STATIC_ASSERT(MAX_LENGTH < UINT32_MAX);
         STATIC_ASSERT(SLOT_LENGTH >= 4);
         mSlotVector.Resize(SLOT_LENGTH);
         mNextFreeItemIndex = 0;
@@ -287,7 +287,7 @@ public:
 
     ~SlotVectorPool()
     {
-        //TODO, shuqi.zsq enable it later, currently will assert
+        // TODO(allen.zfh): enable it later, currently will assert
 #if 0
         typename LockType::Locker lock(mMutex);
         size_t freeCnt = 1;
@@ -354,7 +354,7 @@ private:
     uint32_t mNewFreeItemIndex;
     struct ValueContainer
     {
-        char data[VALUE_SIZE < sizeof(uint32_t) ? sizeof(uint32_t) : VALUE_SIZE];
+        char data[VALUE_SIZE < sizeof(uint32_t) ? sizeof(uint32_t) : VALUE_SIZE];   // NOLINT
     };
     SlotVector<ValueContainer, _SLOT_INDEX_BITS, _VALUE_INDEX_BITS> mSlotVector;
 };

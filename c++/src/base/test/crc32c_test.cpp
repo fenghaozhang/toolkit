@@ -14,7 +14,7 @@ void randomFill(char* buf, size_t length)
 {
     for (size_t i = 0; i < length; i++)
     {
-        buf[i] = rand() % 0xff;
+        buf[i] = rand() % 0xff;     // NOLINT
     }
 }
 
@@ -44,7 +44,7 @@ TEST(Crc32C, TestCombine)
 
     for (uint32_t j = 0; j < outer_rounds; j++)
     {
-        size_t buf_size = rand() % (4*1024*1024) + 1024*1024;
+        size_t buf_size = rand() % (4*1024*1024) + 1024*1024;   // NOLINT
         char* buf = new char[buf_size];
         randomFill(buf, buf_size);
         uint32_t crcfull;
@@ -55,7 +55,7 @@ TEST(Crc32C, TestCombine)
             size_t len1, len2;
             uint32_t crc1, crc2, crccombine;
 
-            len1 = rand() % buf_size;
+            len1 = rand() % buf_size;   // NOLINT
             len2 = buf_size - len1;
             crc1 = docrc32c_intel(0, buf, len1);
             crc2 = docrc32c_intel(0, buf+len1, len2);
@@ -77,7 +77,7 @@ TEST(Crc32C, TestCombine1)
 {
     const uint32_t rounds = 100;
 
-    size_t buf_size = rand() % (4*1024*1024) + 1024*1024;
+    size_t buf_size = rand() % (4*1024*1024) + 1024*1024;   // NOLINT
     char* buf = new char[buf_size];
     randomFill(buf, buf_size);
     uint32_t crcfull;
@@ -92,7 +92,7 @@ TEST(Crc32C, TestCombine1)
         offset = 0;
         while (offset < buf_size)
         {
-            len = rand() % 8192;
+            len = rand() % 8192;    // NOLINT
             if (offset + len > buf_size)
                 len = buf_size - offset;
             crc = docrc32c_intel(0, buf + offset, len);
@@ -116,7 +116,7 @@ TEST(Crc32C, TestCombine2)
 {
     const uint32_t rounds = 100;
 
-    size_t buf_size = rand() % (4*1024*1024) + 1024*1024;
+    size_t buf_size = rand() % (4*1024*1024) + 1024*1024;   // NOLINT
     char* buf = new char[buf_size];
     randomFill(buf, buf_size);
     uint32_t crcfull;
@@ -131,10 +131,10 @@ TEST(Crc32C, TestCombine2)
         offset = 0;
         while (offset < buf_size)
         {
-            len = rand() % 8192;
+            len = rand() % 8192;    // NOLINT
             if (offset + len > buf_size)
                 len = buf_size - offset;
-            if (rand() % 2 == 0)
+            if (rand() % 2 == 0)    // NOLINT
             {
                 crc = docrc32c_intel(0, buf + offset, len);
                 uint32_t crccombine_x = crc32c_combine(crccombine, crc, len);
@@ -209,7 +209,7 @@ TEST(Crc32C, TestCombine4KB)
     randomFill(buf, 4*1024*1024 + 4*1024);
     for (uint32_t i = 0; i < rounds; i++)
     {
-        size_t buf_size = rand() % (4*1024*1024) + 4*1024;
+        size_t buf_size = rand() % (4*1024*1024) + 4*1024;  // NOLINT
         uint32_t crcfull;
 
         crcfull = docrc32c_intel(0, buf, buf_size);

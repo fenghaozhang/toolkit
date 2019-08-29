@@ -4,9 +4,9 @@
 #include <time.h>
 #include <vector>
 
+#include "src/common/assert.h"
 #include "src/common/macros.h"
 #include "src/memory/mempool.h"
-#include "src/common/assert.h"
 
 static void testAlloc(
         size_t count, int size, bool aligned)

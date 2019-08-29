@@ -1,5 +1,5 @@
-#ifndef _SRC_BASE_RANDOMIZER_H
-#define _SRC_BASE_RANDOMIZER_H
+#ifndef _SRC_MATH_RANDOMIZER_H
+#define _SRC_MATH_RANDOMIZER_H
 
 #include <limits.h>
 #include <stdint.h>
@@ -66,4 +66,4 @@ inline uint64_t Randomizer::RandUInt64()
     return (static_cast<uint64_t>(hi) << 32) | lo;
 }
 
-#endif  // _SRC_BASE_RANDOMIZER_H
+#endif  // _SRC_MATH_RANDOMIZER_H

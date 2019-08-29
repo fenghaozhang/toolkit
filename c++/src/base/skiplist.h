@@ -333,7 +333,8 @@ SkipList<Key, Comparator>::findLast() const
             if (level == 0)
             {
                 return x;
-            } else
+            }
+            else
             {
                 // Switch to next list
                 level--;
@@ -368,7 +369,8 @@ bool SkipList<Key, Comparator>::Insert(const Key& key)
     Node* x = findGreaterOrEqual(key, prev);
 
     // Our data structure does not allow duplicate insertion
-    if (x && equal(key, x->key)){
+    if (x && equal(key, x->key))
+    {
         return false;
     }
 

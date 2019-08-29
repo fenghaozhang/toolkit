@@ -1,5 +1,5 @@
-#ifndef _SRC_BASE_SCOPED_PTR_H
-#define _SRC_BASE_SCOPED_PTR_H
+#ifndef _SRC_MEMORY_SCOPED_PTR_H
+#define _SRC_MEMORY_SCOPED_PTR_H
 
 #include <assert.h>
 #include <stdlib.h>
@@ -266,4 +266,4 @@ private:
     bool operator!=(const scoped_array<T1, Deletor1>&) const;
 };
 
-#endif  // _SRC_BASE_SCOPED_PTR_H
+#endif  // _SRC_MEMORY_SCOPED_PTR_H

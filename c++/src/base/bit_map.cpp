@@ -1,7 +1,8 @@
 #include "src/base/bit_map.h"
-#include "src/common/assert.h"
 
 #include <algorithm>
+
+#include "src/common/assert.h"
 
 BitMap::BitMap(size_t capacity, MemPool* pool)
     : mCapacity(capacity),

@@ -70,7 +70,7 @@ TEST(SkipListTest, CheckSequence)
     it.Next();
     while (it.Valid())
     {
-        EXPECT_TRUE(comp(*prev, it.key()) < 0);
+        EXPECT_LT(comp(*prev, it.key()), 0);
         EXPECT_LT(prev->value, it.key().value);
         prev = &(it.key());
         it.Next();

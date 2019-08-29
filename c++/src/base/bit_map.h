@@ -1,5 +1,5 @@
-#ifndef _SRC_BASE_BIT_VECTOR_H
-#define _SRC_BASE_BIT_VECTOR_H
+#ifndef _SRC_BASE_BIT_MAP_H
+#define _SRC_BASE_BIT_MAP_H
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -125,4 +125,4 @@ private:
     DISALLOW_COPY_AND_ASSIGN(SparseBitMap);
 };
 
-#endif // _SRC_BASE_BIT_VECTOR_H
+#endif // _SRC_BASE_BIT_MAP_H
