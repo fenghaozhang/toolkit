@@ -1,5 +1,5 @@
-#ifndef _SRC_THREAD_THISTHREAD_H
-#define _SRC_THREAD_THISTHREAD_H
+#ifndef _SRC_THREAD_THIS_THREAD_H
+#define _SRC_THREAD_THIS_THREAD_H
 
 #include <pthread.h>
 #include <unistd.h>
@@ -48,4 +48,4 @@ private:
     ThisThread();
 };
 
-#endif // _SRC_THREAD_THISTHREAD_H
+#endif // _SRC_THREAD_THIS_THREAD_H

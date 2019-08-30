@@ -3,6 +3,8 @@
 *.swp
 *.swn
 *.swo
+error.err
+errors.err
 tags
 cscope.*
 c++/build/
