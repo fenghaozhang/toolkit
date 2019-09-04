@@ -1,4 +1,4 @@
-#include "src/base/cpu.h"
+#include "src/cpu/cpu.h"
 
 #include <stdio.h>
 
@@ -43,3 +43,5 @@ static inline double readCpuMHz()
     fclose(fp);
     return cpuMHz;
 }
+
+

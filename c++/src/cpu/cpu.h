@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "src/cpu/flag.h"
+
 static inline uint64_t GetCpuCycles()
 {
     uint32_t low, high;
@@ -11,5 +13,7 @@ static inline uint64_t GetCpuCycles()
 }
 
 uint64_t GetCpuMHz();
+
+#define DOES_CPU_SUPPORT(ins) (GetCpuFlags().has_##ins)
 
 #endif  // _SRC_BASE_CPU_H

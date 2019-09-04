@@ -4,8 +4,8 @@
 #include <string.h>
 #include <sys/time.h>
 
-#include "src/base/cpu.h"
 #include "src/common/macros.h"
+#include "src/cpu/cpu.h"
 #include "src/sync/micro_lock.h"
 
 #define USECS_PER_SEC       1000000ULL

@@ -184,7 +184,6 @@ void LockTestFixture::basicLockTest()
     lock.Unlock();
     EXPECT_FALSE(lock.IsLocked());
 
-    EXPECT_FALSE(lock.IsLocked());
     EXPECT_TRUE(lock.TryLock());
     EXPECT_TRUE(lock.IsLocked());
     EXPECT_FALSE(lock.TryLock());

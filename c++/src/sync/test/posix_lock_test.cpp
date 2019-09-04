@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/sync/test/common_test.h"
+#include "src/sync/test/lock_common_test.h"
 
 class PosixLockTestFixture : public LockTestFixture
 {

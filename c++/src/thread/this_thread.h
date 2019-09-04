@@ -7,7 +7,8 @@
 
 #include "src/thread/thread_check.h"
 
-class ThisThread {
+class ThisThread
+{
 public:
     static void SleepInMs(int ms)
     {
