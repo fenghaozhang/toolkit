@@ -46,8 +46,6 @@ private:
             mCond.Lock();
             int data = ++mValue;
             mCond.Signal();
-            mCond.Unlock();
-            mCond.Lock();
             mCond.Wait();
             EXPECT_EQ(mValue - data, 1);
             mCond.Unlock();
@@ -58,8 +56,6 @@ private:
             mCond.Lock();
             int data = ++mValue;
             mCond.Broadcast();
-            mCond.Unlock();
-            mCond.Lock();
             mCond.Wait();
             EXPECT_EQ(mValue - data, 1);
             mCond.Unlock();
@@ -79,6 +75,7 @@ private:
             ++mValue;
             mCond.Signal();
             mCond.Unlock();
+            ThisThread::SleepInUs(1000);
         }
 
         for (uint32_t i = 0; i < round; ++i)
@@ -90,6 +87,7 @@ private:
             ++mValue;
             mCond.Broadcast();
             mCond.Unlock();
+            ThisThread::SleepInUs(1000);
         }
         return NULL;
     }

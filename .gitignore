@@ -7,5 +7,5 @@ error.err
 errors.err
 tags
 cscope.*
-c++/build/
+c++/build/*
 c++/Makefile
